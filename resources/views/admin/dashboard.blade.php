@@ -132,7 +132,7 @@
                             </div>
                         </a>
                     </div>
-                        <div class="col-lg-4">
+                        {{-- <div class="col-lg-4">
                             <a href="/laporan_pelunasan" style="text-decoration: none; color:black;">
                             <div class="info-box" style="width: 50px height: 100px">
                                 <span class="info-box-icon bg-white"><i class="fa fa-file-invoice-dollar"></i></span>
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
+                    </div> --}}
                         <div class="col-lg-4">
                             <a href="/laporan_pelunasan" style="text-decoration: none; color:black;">
                             <div class="info-box" style="width: 50px height: 100px">

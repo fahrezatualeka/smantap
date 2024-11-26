@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SMANTAP | Pemerintah Kota Ambon</title>
+    <title>SMANTAPP | Pemerintah Kota Ambon</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('uploads/logo.png') }}" />
@@ -32,6 +32,28 @@
 
     {{-- Notif Mengembang --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        .navbar-custom-menu .nav-link,
+        .navbar-custom-menu .dropdown-menu a {
+            font-size: 10px; 
+        }
+    
+        .navbar-custom-menu .nav-item .badge {
+    font-size: 10px; 
+        }
+    
+    .navbar-custom-menu .dropdown-toggle {
+            font-size: 10px;
+        }
+    
+        .navbar-custom-menu i {
+            font-size: 14px;
+        }
+
+
+    </style>
+    
+    
 </head>
 
 <bod class="hold-transition skin-blue sidebar-mini">
@@ -46,7 +68,7 @@
                     : route('pimpinan.index')) 
             }}" class="logo">
                 <span class="logo-mini"><b>STP</b></span>
-                <span class="logo-lg"> <b> SMANTAP </b></span>
+                <span class="logo-lg"> <b> SMANTAPP </b></span>
             </a>
             
             
@@ -88,39 +110,38 @@
                         
 
                         {{-- Profil --}}
-<!-- Profil -->
-<!-- Profil -->
-<li class="dropdown user user-menu">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="fa-solid fa-user"></i> 
-        {{ Auth::check() ? Auth::user()->nama : 'Pengguna' }}
-    </a>
-    <ul class="dropdown-menu">
-        <!-- Menu Petugas -->
-        <li class="user-body">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <a href="{{ url('/profil') }}">
-                        <i class="fa-solid fa-user"></i> 
-                        Lihat Profil Akun
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <a href="{{ route('logout') }}" 
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                     <i class="fa-solid fa-right-from-bracket"></i>
-                     <span>Keluar</span>
-                 </a>
-                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                     @csrf
-                 </form>                 
-                </div>
-            </div>            
-        </li>
-    </ul>
-</li>
+
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa-solid fa-user"></i> 
+                                {{ Auth::check() ? Auth::user()->nama : 'Pengguna' }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- Menu Petugas -->
+                                <li class="user-body">
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center">
+                                            <a href="{{ url('/profil') }}">
+                                                <i class="fa-solid fa-user"></i> 
+                                                Lihat Profil Akun
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center">
+                                            <a href="{{ route('logout') }}" 
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="fa-solid fa-right-from-bracket"></i>
+                                            <span>Keluar</span>
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>                 
+                                        </div>
+                                    </div>            
+                                </li>
+                            </ul>
+                        </li>
 
                     </ul>
                 </div>

@@ -234,10 +234,10 @@
                                             <label for="jumlah_penagihan">Jumlah Penagihan</label>
                                             <input type="text" name="jumlah_penagihan" id="jumlah_penagihan" class="form-control" value="{{ number_format($penetapan->jumlah_penagihan, 0, '', '') }}" readonly>
                                         </div>
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="jumlah_pembayaran">Jumlah Pembayaran</label>
                                             <input type="number" name="jumlah_pembayaran" id="jumlah_pembayaran" class="form-control" required>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group">
                                             <label for="tanggal_pembayaran">Tanggal Pembayaran</label>
                                             <input type="date" name="tanggal_pembayaran" id="tanggal_pembayaran" class="form-control" required>

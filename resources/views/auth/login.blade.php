@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>SMANTAP | Pemerintah Kota Ambon</title>
+  <title>SMANTAPP | Pemerintah Kota Ambon</title>
   {{-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> --}}
   <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
@@ -41,7 +41,7 @@
   <div class="login-logo">
     <img src="{{ asset('uploads/logo.png') }}" class="img-fluid" alt="logo" width="100px" height="100px">
     <p style="font-size:30px">
-      <b> SMANTAP </b> <br> SISTEM APLIKASI PENAGIHAN PIUTANG PAJAK PEMERINTAH KOTA AMBON
+      <b> SMANTAPP </b> <br> SISTEM APLIKASI PENAGIHAN PIUTANG PAJAK PEMERINTAH KOTA AMBON
   </p>
   </div>
   <div class="col-md-1"></div>

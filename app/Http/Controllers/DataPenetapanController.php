@@ -262,7 +262,7 @@ public function index()
             // Validasi data yang diterima dari request
             $validated = $request->validate([
                 'status' => 'required|string',
-                'jumlah_pembayaran' => 'required|numeric|min:0',
+                // 'jumlah_pembayaran' => 'required|numeric|min:0',
                 'tanggal_pembayaran' => 'required|date',
                 'bukti_pembayaran' => 'required|file|mimes:jpeg,jpg,png,pdf|max:2048',
                 'bukti_visit' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:2048',
@@ -287,7 +287,7 @@ public function index()
                     'jenis_pajak_id' => $dataPenetapan->jenis_pajak_id,
                     'kategori_pajak_id' => $dataPenetapan->kategori_pajak_id,
                     'jumlah_penagihan' => $dataPenetapan->jumlah_penagihan,
-                    'jumlah_pembayaran' => $validated['jumlah_pembayaran'],
+                    // 'jumlah_pembayaran' => $validated['jumlah_pembayaran'],
                     'tanggal_pembayaran' => $validated['tanggal_pembayaran'],
                     'buktipembayaran' => $buktiPembayaranPath,
                     'buktivisit' => $buktiVisitPath,

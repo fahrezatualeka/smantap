@@ -46,7 +46,7 @@ class DashboardController extends Controller
         $jumlah_piutang_bulan = DataPiutang::whereYear('created_at', date('m'))->sum('jumlah_penagihan');
         
         $laporanpelunasan = LaporanPelunasan::count();
-        $jumlah_pelunasan_tahun = LaporanPelunasan::whereYear('created_at', date('Y'))->sum('jumlah_pembayaran');
+        // $jumlah_pelunasan_tahun = LaporanPelunasan::whereYear('created_at', date('Y'))->sum('jumlah_pembayaran');
         $jumlah_pelunasan_bulan = LaporanPelunasan::whereYear('created_at', date('m'))->sum('jumlah_penagihan');
         
         $jenispajak = JenisPajak::count();
@@ -66,7 +66,7 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', compact('datawajibpajak', 'datapenetapan', 'jumlah_penetapan_tahun', 'jumlah_penetapan_bulan', 
         'datapiutang', 'jumlah_piutang_tahun', 'jumlah_piutang_bulan', 
-        'laporanpelunasan', 'jumlah_pelunasan_tahun', 'jumlah_pelunasan_bulan', 
+        'laporanpelunasan', 'jumlah_pelunasan_bulan', 
         'jenispajak', 'kategoripajak', 
         'admin', 'p1', 'p2', 'p3', 'p4', 'petugaspenagihan', 'pimpinan'));
     }
