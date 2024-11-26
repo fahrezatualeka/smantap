@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 25, 2024 at 02:53 PM
+-- Generation Time: Nov 26, 2024 at 11:31 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -49,8 +49,7 @@ CREATE TABLE `datapenagihan` (
 --
 
 INSERT INTO `datapenagihan` (`id`, `nama_pajak`, `alamat`, `npwpd`, `jenis_pajak_id`, `kategori_pajak_id`, `jumlah_penagihan`, `periode`, `pembagian_zonasi`, `buktipembayaran`, `buktivisit`, `status`, `created_at`, `updated_at`) VALUES
-(2, 'PT. CHRISWIYAN REJEKI (HOTEL)', 'JL. KAKIALY. NO 11. KEC. SIRIMAU. KOTA AMBON', 'P.2.0013865.01.006', 1, 1, 2700000, 'November 2024', 1, NULL, NULL, 'Belum Bayar', '2024-11-25 14:48:01', '2024-11-25 14:48:01'),
-(3, 'PT.MANISE PERMAI (HOTEL)', 'JLN.W.R.SUPRATMAN', 'P.2.0000851.01.004', 1, 2, 120000, 'November 2024', 1, NULL, NULL, 'Belum Bayar', '2024-11-25 14:50:27', '2024-11-25 14:50:27'),
+(2, 'PT. CHRISWIYAN REJEKI (HOTEL)', 'JL. KAKIALY. NO 11. KEC. SIRIMAU. KOTA AMBON', 'P.2.0013865.01.006', 1, 1, 2700000, 'November 2024', 1, 'uploads/pembayaran/vEpu8lU323IamIHrqTMTOdMrQ3GcenU91yTSp5aA.jpg', 'uploads/visit/WhqQnEkipHi5PsSPzYRx4H7m48DzKclOAcKl3QR2.jpg', 'Sudah Bayar', '2024-11-25 14:48:01', '2024-11-26 06:41:46'),
 (4, 'PT.FAST FOOD INDONESIA (KFC AMBON KAKIALY)', 'JL.KAKIALY', 'P.2.0018939.01.006', 2, 8, 200000, 'November 2024', 1, NULL, NULL, 'Belum Bayar', '2024-11-25 14:50:27', '2024-11-25 14:50:27');
 
 -- --------------------------------------------------------
@@ -79,8 +78,8 @@ CREATE TABLE `datapenetapan` (
 
 INSERT INTO `datapenetapan` (`id`, `nama_pajak`, `alamat`, `npwpd`, `jenis_pajak_id`, `kategori_pajak_id`, `jumlah_penagihan`, `periode`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'PT.TANTUI INDAH PERMAI (HOTEL SANTIKA)', 'JL.JEND SUDIRMAN RT.001/08', 'P.2.0021556.01.011', 1, 1, 30000.00, 'November 2024', 'Sudah Bayar', '2024-11-25 14:46:03', '2024-11-25 14:49:56'),
-(2, 'PT. CHRISWIYAN REJEKI (HOTEL)', 'JL. KAKIALY. NO 11. KEC. SIRIMAU. KOTA AMBON', 'P.2.0013865.01.006', 1, 1, 2700000.00, 'November 2024', 'Belum Bayar', '2024-11-25 14:46:03', '2024-11-25 14:46:03'),
-(3, 'PT.MANISE PERMAI (HOTEL)', 'JLN.W.R.SUPRATMAN', 'P.2.0000851.01.004', 1, 2, 120000.00, 'November 2024', 'Belum Bayar', '2024-11-25 14:46:03', '2024-11-25 14:46:03'),
+(2, 'PT. CHRISWIYAN REJEKI (HOTEL)', 'JL. KAKIALY. NO 11. KEC. SIRIMAU. KOTA AMBON', 'P.2.0013865.01.006', 1, 1, 2700000.00, 'November 2024', 'Sudah Bayar', '2024-11-25 14:46:03', '2024-11-26 12:30:45'),
+(3, 'PT.MANISE PERMAI (HOTEL)', 'JLN.W.R.SUPRATMAN', 'P.2.0000851.01.004', 1, 2, 120000.00, 'November 2024', 'Sudah Bayar', '2024-11-25 14:46:03', '2024-11-26 06:43:59'),
 (4, 'PT.FAST FOOD INDONESIA (KFC AMBON KAKIALY)', 'JL.KAKIALY', 'P.2.0018939.01.006', 2, 8, 200000.00, 'November 2024', 'Belum Bayar', '2024-11-25 14:46:03', '2024-11-25 14:46:03'),
 (5, 'PT.FASTFOOD INDONESIA . TBK ( KFC )', 'JL.IR.M.PUTUHENA RUMAHTIGA /WAILELA RT.001/02', 'P.2.0021240.03.003', 2, 8, 1250000.00, 'November 2024', 'Belum Bayar', '2024-11-25 14:46:03', '2024-11-25 14:46:03'),
 (6, 'PT.FAST FOOD INDONESIA ( KFC )', 'JL.SULTAN HASANUDIN RT.005/05 KOMP.MCM', 'P.2.0018142.01.013', 2, 8, 40000.00, 'November 2024', 'Belum Bayar', '2024-11-25 14:46:03', '2024-11-25 14:46:03'),
@@ -113,8 +112,6 @@ CREATE TABLE `datapiutang` (
 --
 
 INSERT INTO `datapiutang` (`id`, `nama_pajak`, `alamat`, `npwpd`, `jenis_pajak_id`, `kategori_pajak_id`, `jumlah_penagihan`, `periode`, `pembagian_zonasi`, `created_at`, `updated_at`) VALUES
-(2, 'PT. CHRISWIYAN REJEKI (HOTEL)', 'JL. KAKIALY. NO 11. KEC. SIRIMAU. KOTA AMBON', 'P.2.0013865.01.006', 1, 1, 2700000.00, 'November 2024', '1', '2024-11-25 14:47:37', '2024-11-25 14:48:01'),
-(3, 'PT.MANISE PERMAI (HOTEL)', 'JLN.W.R.SUPRATMAN', 'P.2.0000851.01.004', 1, 2, 120000.00, 'November 2024', '1', '2024-11-25 14:47:37', '2024-11-25 14:50:27'),
 (4, 'PT.FAST FOOD INDONESIA (KFC AMBON KAKIALY)', 'JL.KAKIALY', 'P.2.0018939.01.006', 2, 8, 200000.00, 'November 2024', '1', '2024-11-25 14:47:37', '2024-11-25 14:50:27'),
 (5, 'PT.FASTFOOD INDONESIA . TBK ( KFC )', 'JL.IR.M.PUTUHENA RUMAHTIGA /WAILELA RT.001/02', 'P.2.0021240.03.003', 2, 8, 1250000.00, 'November 2024', NULL, '2024-11-25 14:47:37', '2024-11-25 14:47:37'),
 (6, 'PT.FAST FOOD INDONESIA ( KFC )', 'JL.SULTAN HASANUDIN RT.005/05 KOMP.MCM', 'P.2.0018142.01.013', 2, 8, 40000.00, 'November 2024', NULL, '2024-11-25 14:47:37', '2024-11-25 14:47:37'),
@@ -1435,7 +1432,6 @@ CREATE TABLE `laporanpelunasan` (
   `jenis_pajak_id` bigint(20) UNSIGNED DEFAULT NULL,
   `kategori_pajak_id` bigint(20) UNSIGNED DEFAULT NULL,
   `jumlah_penagihan` decimal(15,2) NOT NULL,
-  `jumlah_pembayaran` decimal(15,2) NOT NULL,
   `tanggal_pembayaran` date NOT NULL,
   `buktipembayaran` varchar(255) DEFAULT NULL,
   `buktivisit` varchar(255) DEFAULT NULL,
@@ -1448,10 +1444,9 @@ CREATE TABLE `laporanpelunasan` (
 -- Dumping data for table `laporanpelunasan`
 --
 
-INSERT INTO `laporanpelunasan` (`id`, `nama_pajak`, `alamat`, `npwpd`, `jenis_pajak_id`, `kategori_pajak_id`, `jumlah_penagihan`, `jumlah_pembayaran`, `tanggal_pembayaran`, `buktipembayaran`, `buktivisit`, `tempat_pembayaran`, `created_at`, `updated_at`) VALUES
-(1, 'CV. TIRTA KENCANA', 'DESA AMAHUSU', 'P.2.0001580.04.009.', 3, 18, 120000.00, 120000.00, '2024-11-25', 'uploads/pembayaran/h9R21tS2JbnOGer4Gr80YcA0SSYkdxwywyuDdApE.jpg', 'uploads/visit/DjsjSLWr8JwlztrM4f48aP2br1WQAfn2HefR1i4b.jpg', 'Admin', '2024-11-25 14:47:19', '2024-11-25 14:47:19'),
-(2, 'PT.TANTUI INDAH PERMAI (HOTEL SANTIKA)', 'JL.JEND SUDIRMAN RT.001/08', 'P.2.0021556.01.011', 1, 1, 30000.00, 30000.00, '2024-11-24', 'uploads/pembayaran/YXAt5txJZ3EXcrGplSavht8xXZzEB1egqaNe25Qs.jpg', 'uploads/visit/5f8NjAMoAU32p6tiQhZy4GGu4SYtDTI3SSasxguj.jpg', 'Petugas Penagihan', '2024-11-25 14:49:56', '2024-11-25 14:49:56'),
-(3, 'PT.LESTARI MITRA SEMBADA ( CINEMA XXI ACC )', 'JL.WOLTER MONGINSIDI RT.003/01 KOMP.ACC NEGERI PASSO', 'P.2.0019829.02.004', 2, 12, 7500000.00, 7500000.00, '2024-11-07', 'uploads/pembayaran/F0oep1dpGUZUIyPZLHzLGqBA6sykNTCrozTnDopW.jpg', 'uploads/visit/hlIIGWYBC4nu6CURUggcLBO0bhnLKpaO8LvnyFaV.jpg', 'Admin', '2024-11-25 14:51:54', '2024-11-25 14:51:54');
+INSERT INTO `laporanpelunasan` (`id`, `nama_pajak`, `alamat`, `npwpd`, `jenis_pajak_id`, `kategori_pajak_id`, `jumlah_penagihan`, `tanggal_pembayaran`, `buktipembayaran`, `buktivisit`, `tempat_pembayaran`, `created_at`, `updated_at`) VALUES
+(1, 'PT.MANISE PERMAI (HOTEL)', 'JLN.W.R.SUPRATMAN', 'P.2.0000851.01.004', 1, 2, 120000.00, '2024-11-26', 'uploads/pembayaran/sdKg2r1s5xpNPHuyNgz4hh2ljdpoUE4QsPWZibgI.jpg', 'uploads/visit/r0lnw9PBD2aE6XDAMnXT62vkO7YRT6snd4ouL8Mr.png', 'Petugas Penagihan', '2024-11-26 06:43:59', '2024-11-26 06:43:59'),
+(2, 'PT. CHRISWIYAN REJEKI (HOTEL)', 'JL. KAKIALY. NO 11. KEC. SIRIMAU. KOTA AMBON', 'P.2.0013865.01.006', 1, 1, 2700000.00, '2024-11-26', 'uploads/pembayaran/4OEpLECrp20SEndfLpsAaWuxeqAdufyA4qj7KQ6V.jpg', 'uploads/visit/XGd7nMXIAUXFAssHYiqdAM7pe9VoL2S9vRgTo02u.png', 'Admin', '2024-11-26 12:30:45', '2024-11-26 12:30:45');
 
 -- --------------------------------------------------------
 
@@ -1614,7 +1609,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (123, '2024_11_25_210727_create_datapiutang_table', 93),
 (124, '2024_11_25_210755_create_datapenetapan_table', 93),
 (125, '2024_11_25_210819_create_laporanpelunasan_table', 93),
-(126, '2024_11_25_210847_create_datapenagihan_table', 93);
+(126, '2024_11_25_210847_create_datapenagihan_table', 93),
+(127, '2024_11_26_133845_create_laporanpelunasan_table', 94),
+(128, '2024_11_26_134249_create_laporanpelunasan_table', 95);
 
 -- --------------------------------------------------------
 
@@ -1830,7 +1827,7 @@ ALTER TABLE `kategoripajak`
 -- AUTO_INCREMENT for table `laporanpelunasan`
 --
 ALTER TABLE `laporanpelunasan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `laporanpiutang`
@@ -1842,7 +1839,7 @@ ALTER TABLE `laporanpiutang`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
