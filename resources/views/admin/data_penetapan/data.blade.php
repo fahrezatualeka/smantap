@@ -6,8 +6,8 @@
 
 <style>
     .table-responsive {
-        max-height: 345px;
-        max-height: 280px;
+        max-height: 375px;
+        /* max-height: 280px; */
         overflow-y: auto;
         }
 </style>
@@ -165,9 +165,10 @@
                     <th>Nama Pajak</th>
                     <th>Alamat</th>
                     <th>NPWPD</th>
-                    {{-- <th>Nomor Telepon</th> --}}
                     <th>Jenis Pajak</th>
                     <th>Kategori Pajak</th>
+                    <th>Nomor Telepon</th>
+                    <th>Pembagian Zonasi</th>
                     <th>Jumlah Penagihan</th>
                     <th>Periode</th>
                     <th>Status</th>
@@ -189,9 +190,10 @@
                     <td>{{ $penetapan->nama_pajak }}</td>
                     <td>{{ $penetapan->alamat }}</td>
                     <td>{{ $penetapan->npwpd }}</td>
-                    {{-- <td>{{ $pelunasan->nomor_telepon }}</td> --}}
                     <td>{{ $penetapan->jenisPajak->jenispajak ?? '-' }}</td>
                     <td>{{ $penetapan->kategoriPajak->kategoripajak ?? '-' }}</td>
+                    <td>{{ $penetapan->nomor_telepon }}</td>
+                    <td>{{ $penetapan->pembagian_zonasi }}</td>
                     <td>Rp{{ number_format((float) $penetapan->jumlah_penagihan, 0, ',', '.') }}</td>
                     <td>{{ $penetapan->periode }}</td>
                     
@@ -233,6 +235,10 @@
                                         <div class="form-group">
                                             <label for="jumlah_penagihan">Jumlah Penagihan</label>
                                             <input type="text" name="jumlah_penagihan" id="jumlah_penagihan" class="form-control" value="{{ number_format($penetapan->jumlah_penagihan, 0, '', '') }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="periode">Periode</label>
+                                            <input type="text" name="periode" id="periode" class="form-control" value="{{ $penetapan->periode }}" readonly>
                                         </div>
                                         {{-- <div class="form-group">
                                             <label for="jumlah_pembayaran">Jumlah Pembayaran</label>

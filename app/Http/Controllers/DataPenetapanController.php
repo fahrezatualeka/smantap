@@ -129,6 +129,8 @@ public function index()
             'jumlah_penagihan' => $request->jumlah_penagihan,
             'jenis_pajak_id' => $jenisPajakId,
             'kategori_pajak_id' => $kategoriPajakId,
+            'nomor_telepon' => $wajibPajak->nomor_telepon,
+            'pembagian_zonasi' => $wajibPajak->pembagian_zonasi,
             'periode' => $request->bulan . ' ' . $request->tahun,
         ]);
     
@@ -286,6 +288,8 @@ public function index()
                     'npwpd' => $dataPenetapan->npwpd,
                     'jenis_pajak_id' => $dataPenetapan->jenis_pajak_id,
                     'kategori_pajak_id' => $dataPenetapan->kategori_pajak_id,
+                    'nomor_telepon' => $dataPenetapan->nomor_telepon,
+                    'pembagian_zonasi' => $dataPenetapan->pembagian_zonasi,
                     'jumlah_penagihan' => $dataPenetapan->jumlah_penagihan,
                     // 'jumlah_pembayaran' => $validated['jumlah_pembayaran'],
                     'tanggal_pembayaran' => $validated['tanggal_pembayaran'],

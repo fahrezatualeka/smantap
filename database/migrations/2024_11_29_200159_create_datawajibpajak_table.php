@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('nama_pajak');
             $table->string('alamat');
             $table->string('npwpd');
-            // $table->string('nama_pj');
-            // $table->string('nomor_telepon');
             $table->unsignedBigInteger('jenis_pajak_id');
             $table->unsignedBigInteger('kategori_pajak_id');
+            // $table->integer('nomor_telepon');
+            $table->string('nomor_telepon');
+            $table->integer('pembagian_zonasi');
             // $table->boolean('is_readonly')->default(false);
             // $table->string('jumlah_piutang')->nullable();
             // $table->string('status_lunas')->nullable()->default('Belum Lunas');

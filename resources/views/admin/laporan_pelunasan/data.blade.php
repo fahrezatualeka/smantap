@@ -3,7 +3,7 @@
 
 <style>
     .table-responsive {
-        max-height: 545px;
+        max-height: 600px;
         overflow-y: auto;
         }
 </style>
@@ -98,7 +98,10 @@
                     <th>NPWPD</th>
                     <th>Jenis Pajak</th>
                     <th>Kategori Pajak</th>
+                    <th>Nomor Telepon</th>
+                    <th>Pembagian Zonasi</th>
                     <th>Jumlah Penagihan</th>
+                    <th>Periode</th>
                     {{-- <th>Jumlah Pembayaran</th> --}}
                     <th>Tanggal Pembayaran</th>
                     <th>Bukti Pembayaran</th>
@@ -118,10 +121,12 @@
                     <td>{{ $pelunasan->nama_pajak }}</td>
                     <td>{{ $pelunasan->alamat }}</td>
                     <td>{{ $pelunasan->npwpd }}</td>
-                    {{-- <td>{{ $pelunasan->nomor_telepon }}</td> --}}
                     <td>{{ $pelunasan->jenisPajak->jenispajak ?? 'N/A' }}</td>
                     <td>{{ $pelunasan->kategoriPajak->kategoripajak ?? 'N/A' }}</td>                    
+                    <td>{{ $pelunasan->nomor_telepon }}</td>
+                    <td>{{ $pelunasan->pembagian_zonasi }}</td>
                     <td>Rp{{ number_format((float) $pelunasan->jumlah_penagihan, 0, ',', '.') }}</td>
+                    <td>{{ $pelunasan->periode }}</td>
                     {{-- <td>Rp{{ number_format((float) $pelunasan->jumlah_pembayaran, 0, ',', '.') }}</td> --}}
 
                     <td>{{ $pelunasan->tanggal_pembayaran }}</td>

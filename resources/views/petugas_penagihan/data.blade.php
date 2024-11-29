@@ -68,9 +68,10 @@
                     <th>Jenis Pajak</th>
                     <th>Kategori Pajak</th>
                     {{-- <th>Tanggal Tagihan</th> --}}
+                    <th>Nomor Telepon</th>
+                    <th>Pembagian Zonasi</th>
                     <th>Jumlah Penagihan</th>
                     <th>Periode</th>
-                    <th>Pembagian Zonasi</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -91,9 +92,10 @@
                     {{-- <td>{{ $piutang->nomor_telepon }}</td> --}}
                     <td>{{ $piutang->jenisPajak->jenispajak ?? 'N/A' }}</td>
                     <td>{{ $piutang->kategoriPajak->kategoripajak ?? 'N/A' }}</td>                    
+                    <td>{{ $piutang->nomor_telepon }}</td>
+                    <td>{{ $piutang->pembagian_zonasi }}</td>
                     <td>Rp{{ number_format((float) $piutang->jumlah_penagihan, 0, ',', '.') }}</td>
                     <td>{{ $piutang->periode }}</td>
-                    <td>{{ $piutang->pembagian_zonasi }}</td>
 
                     {{-- <td>
                         <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#paymentModal{{ $piutang->id }}">
@@ -140,6 +142,10 @@
                                         <div class="form-group">
                                             <label for="jumlah_penagihan">Jumlah Penagihan</label>
                                             <input type="text" name="jumlah_penagihan" id="jumlah_penagihan" class="form-control" value="{{ number_format($piutang->jumlah_penagihan, 0, '', '') }}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="periode">Periode</label>
+                                            <input type="text" name="periode" id="periode" class="form-control" value="{{ $piutang->periode }}" readonly>
                                         </div>
                                         {{-- <div class="form-group">
                                             <label for="jumlah_pembayaran">Jumlah Pembayaran</label>

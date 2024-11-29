@@ -38,30 +38,39 @@
                                 <input type="text" name="npwpd" id="npwpd" class="form-control" value="{{ $dataWajibPajak->npwpd }}">
                             </div>
 
-                            {{-- <div class="form-group">
-                                <label for="nomor_telepon">Nomor Telepon</label>
-                                <input type="number" name="nomor_telepon" id="nomor_telepon" class="form-control" value="{{ $dataWajibPajak->nomor_telepon }}">
-                            </div> --}}
-
+                            
                             <div class="form-group">
                                 <label for="jenis_pajak_id">Jenis Pajak</label>
                                 <select name="jenis_pajak_id" id="jenis_pajak_id" class="form-control">
                                     @foreach($jenisPajak as $jenis)
-                                        <option value="{{ $jenis->id }}" {{ $jenis->id == $dataWajibPajak->jenis_pajak_id ? 'selected' : '' }}>
-                                            {{ $jenis->jenispajak }}
-                                        </option>
+                                    <option value="{{ $jenis->id }}" {{ $jenis->id == $dataWajibPajak->jenis_pajak_id ? 'selected' : '' }}>
+                                        {{ $jenis->jenispajak }}
+                                    </option>
                                     @endforeach
                                 </select>
                             </div>
-
+                            
                             <div class="form-group">
                                 <label for="kategori_pajak_id">Kategori Pajak</label>
                                 <select name="kategori_pajak_id" id="kategori_pajak_id" class="form-control">
                                     @foreach($kategoriPajak as $kategori)
-                                        <option value="{{ $kategori->id }}" {{ $kategori->id == $dataWajibPajak->kategori_pajak_id ? 'selected' : '' }}>
-                                            {{ $kategori->kategoripajak }}
-                                        </option>
+                                    <option value="{{ $kategori->id }}" {{ $kategori->id == $dataWajibPajak->kategori_pajak_id ? 'selected' : '' }}>
+                                        {{ $kategori->kategoripajak }}
+                                    </option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="nomor_telepon">Nomor Telepon</label>
+                                <input type="number" name="nomor_telepon" id="nomor_telepon" class="form-control" value="{{ $dataWajibPajak->nomor_telepon }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="pembagian_zonasi">Pembagian Zonasi</label>
+                                <select name="pembagian_zonasi" id="pembagian_zonasi" class="form-control">
+                                    <option value="1" {{ $dataWajibPajak->pembagian_zonasi == '1' ? 'selected' : '' }}>1</option>
+                                    <option value="2" {{ $dataWajibPajak->pembagian_zonasi == '2' ? 'selected' : '' }}>2</option>
+                                    <option value="3" {{ $dataWajibPajak->pembagian_zonasi == '3' ? 'selected' : '' }}>3</option>
+                                    <option value="4" {{ $dataWajibPajak->pembagian_zonasi == '4' ? 'selected' : '' }}>4</option>
                                 </select>
                             </div>
 

@@ -12,9 +12,10 @@ class DataWajibPajak extends Model
         'nama_pajak',
         'alamat',
         'npwpd',
-        // 'nomor_telepon',
         'jenis_pajak_id',
         'kategori_pajak_id',
+        'nomor_telepon',
+        'pembagian_zonasi',
         // 'status_lunas',
     ];
 

@@ -3,8 +3,8 @@
 
 <style>
     .table-responsive {
-        /* max-height: 435px; */
-        max-height: 375px;
+        max-height: 465px;
+        /* max-height: 375px; */
         overflow-y: auto;
         }
 </style>
@@ -150,9 +150,10 @@
                         <th>Nama Pajak</th>
                         <th>Alamat</th>
                         <th>NPWPD</th>
-                        {{-- <th>Nomor Telepon</th> --}}
                         <th>Jenis Pajak</th>
                         <th>Kategori Pajak</th>
+                        <th>Nomor Telepon</th>
+                        <th>Pembagian Zonasi</th>
                         {{-- <th>Tanggal Tagihan</th> --}}
                         {{-- <th>Jumlah Piutang</th> --}}
                         <th style="width: 124px">Aksi</th>
@@ -173,9 +174,10 @@
                         <td>{{ $datawajibpajak->nama_pajak }}</td>
                         <td>{{ $datawajibpajak->alamat }}</td>
                         <td>{{ $datawajibpajak->npwpd }}</td>
-                        {{-- <td>{{ $datawajibpajak->nomor_telepon }}</td> --}}
                         <td>{{ $datawajibpajak->jenisPajak ? $datawajibpajak->jenisPajak->jenispajak : 'Tidak Ditemukan' }}</td>
                         <td>{{ $datawajibpajak->kategoriPajak ? $datawajibpajak->kategoriPajak->kategoripajak : 'Tidak Ditemukan' }}</td>
+                        <td>{{ $datawajibpajak->nomor_telepon }}</td>
+                        <td>{{ $datawajibpajak->pembagian_zonasi }}</td>
                         {{-- <td>Rp{{ number_format((float) $datawajibpajak->jumlah_piutang, 0, ',', '.') }}</td> --}}
                         {{-- <td>
                             @if($datawajibpajak->jumlah_piutang > 0)

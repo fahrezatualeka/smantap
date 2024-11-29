@@ -32,26 +32,42 @@ class DataWajibPajakController extends Controller
     }
 
     public function import(Request $request)
-    {
-        // Validasi file yang diupload
-        $request->validate([
-            'import_data_wajibpajak' => 'required|file|mimes:xlsx,xls', // Membatasi tipe file ke xlsx dan xls
-        ]);
-    
-        try {
-            // Proses impor data
-            Excel::import(new DataWajibPajakImport, $request->file('import_data_wajibpajak'));
-    
-            // Redirect kembali dengan pesan sukses
-            return redirect()->back()->with('success', 'Data berhasil diimpor!');
-        } catch (\Exception $e) {
-            // Tangkap dan log error
-            Log::error('Error during import: ' . $e->getMessage());
-    
-            // Redirect kembali dengan pesan error
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat impor data!');
+{
+    // Debug untuk melihat semua input
+    Log::info('Input request: ', $request->all());
+
+    // Validasi file yang diupload
+    $request->validate([
+        'import_data_wajibpajak' => 'required|file|mimes:xlsx,xls|max:2048',
+    ]);
+
+    // Ambil file yang diupload
+    $uploadedFile = $request->file('import_data_wajibpajak');
+    Log::info('Ekstensi file: ' . $uploadedFile->getClientOriginalExtension());
+    Log::info('Tebakan ekstensi: ' . $uploadedFile->guessExtension());
+    Log::info('MIME type: ' . $uploadedFile->getMimeType());
+    Log::info('Uploaded File Path: ' . $uploadedFile->getPath());
+    Log::info('Uploaded File Name: ' . $uploadedFile->getClientOriginalName());
+
+    try {
+        // Proses impor data
+        Excel::import(new DataWajibPajakImport, $uploadedFile);
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Data berhasil diimpor!');
+    } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+        $failures = $e->failures();
+        foreach ($failures as $failure) {
+            Log::error("Row {$failure->row()} failed: " . json_encode($failure->errors()));
         }
+        return redirect()->back()->with('error', 'Data gagal diimpor, periksa format file!');
+    } catch (\Exception $e) {
+        // Debug error
+        Log::error('Error during import: ' . $e->getMessage());
+        dd('Error Detail: ', $e->getMessage(), $e->getTrace());
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat impor data!');
     }
+}
 
     public function create()
     {
@@ -67,9 +83,10 @@ class DataWajibPajakController extends Controller
             'nama_pajak' => 'required',
             'alamat' => 'required',
             'npwpd' => 'nullable',
-            // 'nomor_telepon' => 'nullable',
             'jenis_pajak_id' => 'required|exists:jenispajak,id',
             'kategori_pajak_id' => 'required|exists:kategoripajak,id',
+            'nomor_telepon' => 'required|string|max:20|regex:/^[0-9+\-\s]*$/',
+            'pembagian_zonasi' => 'required',
             // 'jumlah_piutang' => 'nullable|numeric',  // pastikan itu angka
         ]);
 
@@ -82,9 +99,11 @@ class DataWajibPajakController extends Controller
             'nama_pajak' => $request->nama_pajak,
             'alamat' => $request->alamat,
             'npwpd' => $request->npwpd,
-            // 'nomor_telepon' => $request->nomor_telepon,
             'jenis_pajak_id' => $request->jenis_pajak_id,
             'kategori_pajak_id' => $request->kategori_pajak_id,
+            'nomor_telepon' => $request->nomor_telepon,
+            
+            'pembagian_zonasi' => $request->pembagian_zonasi,
             // 'jumlah_piutang' => $jumlahPiutang,  // simpan sebagai angka
         ]);
         
@@ -100,13 +119,14 @@ class DataWajibPajakController extends Controller
     {
         $dataWajibPajak = DataWajibPajak::findOrFail($id);
         $jenisPajak = JenisPajak::all();
-        $kategoriPajak = KategoriPajak::where('jenis_pajak_id', $dataWajibPajak->jenis_pajak_id)->get();
-    
+        // $kategoriPajak = KategoriPajak::where('jenis_pajak_id', $dataWajibPajak->jenis_pajak_id)->get();
+        $kategoriPajak = KategoriPajak::all();    
         return view('admin.data_wajibpajak.edit', compact('dataWajibPajak', 'jenisPajak', 'kategoriPajak'));
     }
     
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         // Validasi input
         $request->validate([
             'nama_pajak' => 'required',
@@ -114,6 +134,8 @@ class DataWajibPajakController extends Controller
             'npwpd' => 'nullable',
             'jenis_pajak_id' => 'required|exists:jenispajak,id',
             'kategori_pajak_id' => 'required|exists:kategoripajak,id',
+            'nomor_telepon' => 'required',
+            'pembagian_zonasi' => 'required|integer|in:1, 2, 3, 4',
         ]);
         
         // Cari data berdasarkan ID
@@ -126,6 +148,8 @@ class DataWajibPajakController extends Controller
             'npwpd' => $request->npwpd,
             'jenis_pajak_id' => $request->jenis_pajak_id,
             'kategori_pajak_id' => $request->kategori_pajak_id,
+            'nomor_telepon' => $request->nomor_telepon,
+            'pembagian_zonasi' => $request->pembagian_zonasi,
         ]);
     
         // Update data di tabel DataPenetapan jika ada perubahan pada DataWajibPajak
@@ -137,6 +161,8 @@ class DataWajibPajakController extends Controller
                 'alamat' => $dataWajibPajak->alamat,
                 'jenis_pajak_id' => $dataWajibPajak->jenis_pajak_id,
                 'kategori_pajak_id' => $dataWajibPajak->kategori_pajak_id,
+                'nomor_telepon' => $dataWajibPajak->nomor_telepon,
+                'pembagian_zonasi' => $dataWajibPajak->pembagian_zonasi,
             ]);
         }
     

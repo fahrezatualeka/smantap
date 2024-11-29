@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('nama_pajak');
             $table->string('alamat');
             $table->string('npwpd')->unique();
-            // $table->string('nama_pj')->nullable();
-            // $table->string('nomor_telepon')->nullable();
-            $table->string('jenis_pajak_id');
-            $table->string('kategori_pajak_id');
+            $table->unsignedBigInteger('jenis_pajak_id');
+            $table->unsignedBigInteger('kategori_pajak_id');
+            $table->string('nomor_telepon');
+            $table->integer('pembagian_zonasi');
             $table->decimal('jumlah_penagihan', 15, 2);
             $table->string('periode');
             $table->timestamps();

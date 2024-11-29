@@ -19,9 +19,10 @@ public function up(): void
         $table->string('npwpd');
         $table->unsignedBigInteger('jenis_pajak_id');
         $table->unsignedBigInteger('kategori_pajak_id');
+        $table->string('nomor_telepon');
+        $table->integer('pembagian_zonasi');
         $table->bigInteger('jumlah_penagihan');
         $table->string('periode');
-        $table->integer('pembagian_zonasi');
         $table->string('buktipembayaran')->nullable();
         $table->string('buktivisit')->nullable();
         // $table->string('status');

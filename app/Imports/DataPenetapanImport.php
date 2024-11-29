@@ -80,6 +80,8 @@ class DataPenetapanImport implements ToModel, WithHeadingRow
                     'npwpd' => $wajibPajak->npwpd,
                     'jenis_pajak_id' => $wajibPajak->jenis_pajak_id,
                     'kategori_pajak_id' => $wajibPajak->kategori_pajak_id,
+                    'nomor_telepon' => $wajibPajak->nomor_telepon,
+                    'pembagian_zonasi' => $wajibPajak->pembagian_zonasi,
                     'jumlah_penagihan' => $jumlahPenagihan,
                     'periode' => "$bulanNama {$periodeParts[0]}", // Formatkan periode
                     'status' => 'Belum Bayar', // Status default jika baru

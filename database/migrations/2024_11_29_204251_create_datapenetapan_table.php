@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('npwpd');
             $table->unsignedBigInteger('jenis_pajak_id')->nullable();
             $table->unsignedBigInteger('kategori_pajak_id')->nullable();
+            $table->string('nomor_telepon');
+            $table->integer('pembagian_zonasi');
             $table->decimal('jumlah_penagihan', 15, 2);
             $table->string('periode')->nullable();
             // $table->string('status')->nullable()->default('Belum Bayar');

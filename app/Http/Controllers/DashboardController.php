@@ -31,23 +31,22 @@ class DashboardController extends Controller
         
         $datawajibpajak = DataWajibPajak::count();
         
-        $datapenetapan = DataPenetapan::count();
+        // $datapenetapan = DataPenetapan::count();
         $jumlah_penetapan_tahun = DataPenetapan::whereYear('created_at', date('Y'))->sum('jumlah_penagihan');
-        $jumlah_penetapan_bulan = DataPenetapan::whereYear('created_at', date('Y'))
-        ->whereMonth('created_at', date('m'))
-        ->sum('jumlah_penagihan');
+        // $jumlah_penetapan_bulan = DataPenetapan::whereYear('created_at', date('Y'))
+        // ->whereMonth('created_at', date('m'))
+        // ->sum('jumlah_penagihan');
     
     
+        // $laporanpelunasan = LaporanPelunasan::count();
+        $jumlah_pelunasan_tahun = LaporanPelunasan::whereYear('created_at', date('Y'))->sum('jumlah_penagihan');
+        // $jumlah_pelunasan_bulan = LaporanPelunasan::whereYear('created_at', date('m'))->sum('jumlah_penagihan');
+
         
-        
-        
-        $datapiutang = DataPiutang::count();
+        // $datapiutang = DataPiutang::count();
         $jumlah_piutang_tahun = DataPiutang::whereYear('created_at', date('Y'))->sum('jumlah_penagihan');
-        $jumlah_piutang_bulan = DataPiutang::whereYear('created_at', date('m'))->sum('jumlah_penagihan');
+        // $jumlah_piutang_bulan = DataPiutang::whereYear('created_at', date('m'))->sum('jumlah_penagihan');
         
-        $laporanpelunasan = LaporanPelunasan::count();
-        // $jumlah_pelunasan_tahun = LaporanPelunasan::whereYear('created_at', date('Y'))->sum('jumlah_pembayaran');
-        $jumlah_pelunasan_bulan = LaporanPelunasan::whereYear('created_at', date('m'))->sum('jumlah_penagihan');
         
         $jenispajak = JenisPajak::count();
 
@@ -64,10 +63,7 @@ class DashboardController extends Controller
         $pimpinan = User::where('role', 'pimpinan')->count();
 
 
-        return view('admin.dashboard', compact('datawajibpajak', 'datapenetapan', 'jumlah_penetapan_tahun', 'jumlah_penetapan_bulan', 
-        'datapiutang', 'jumlah_piutang_tahun', 'jumlah_piutang_bulan', 
-        'laporanpelunasan', 'jumlah_pelunasan_bulan', 
-        'jenispajak', 'kategoripajak', 
+        return view('admin.dashboard', compact('datawajibpajak', 'jumlah_penetapan_tahun', 'jumlah_pelunasan_tahun', 'jumlah_piutang_tahun', 'jenispajak', 'kategoripajak', 
         'admin', 'p1', 'p2', 'p3', 'p4', 'petugaspenagihan', 'pimpinan'));
     }
 }

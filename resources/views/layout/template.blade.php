@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <!-- Bootstrap CSS -->
 {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
@@ -161,7 +162,7 @@
                 @switch(auth()->user()->role)
                     @case('admin')
                         <ul class="sidebar-menu" data-widget="tree">
-                            <li class="header">PENAGIHAN</li>
+                            <li class="header">MANAJEMEN DATA</li>
                             <li class="{{ request()->is('dashboard') ? 'active' : '' }}">
                                 <a href="{{ url('dashboard') }}">
                                     <i class="fa fa-house"></i> <span>Dashboard</span>
@@ -186,12 +187,12 @@
                                     <span>Data Penetapan</span>
                                 </a>
                             </li>
-                            <li class="{{ request()->is('data_piutang') ? 'active' : '' }}">
+                            {{-- <li class="{{ request()->is('data_piutang') ? 'active' : '' }}">
                                 <a href="{{ url('data_piutang') }}">
                                     <i class="fa fa-money-bill-1"></i>
                                     <span>Data Piutang</span>
                                 </a>
-                            </li>
+                            </li> --}}
         
                             {{-- <li class="{{ request()->is('data_pelunasan') ? 'active' : '' }}">
                                 <a href="{{ url('data_pelunasan') }}">

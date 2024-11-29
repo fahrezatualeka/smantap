@@ -63,11 +63,12 @@
                         'npwpd' => $piutang->npwpd,
                         'nama_pajak' => $piutang->nama_pajak,
                         'alamat' => $piutang->alamat,
-                        'nomor_telepon' => $piutang->nomor_telepon,
                         'jenis_pajak_id' => $piutang->jenis_pajak_id,
                         'kategori_pajak_id' => $piutang->kategori_pajak_id,
-                        'jumlah_penagihan' => $piutang->jumlah_penagihan,
+                        'nomor_telepon' => $piutang->nomor_telepon,
                         'pembagian_zonasi' => $piutang->pembagian_zonasi,
+                        'jumlah_penagihan' => $piutang->jumlah_penagihan,
+                        'periode' => $piutang->periode,
                         'status' => 'Belum Bayar',
                     ]);
                 }

@@ -34,10 +34,6 @@
                                 <label for="npwpd">NPWPD</label>
                                 <input type="text" name="npwpd" id="npwpd" class="form-control" value="{{ old('npwpd') }}">
                             </div>
-                            {{-- <div class="form-group">
-                                <label for="nomor_telepon">Nomor Telepon</label>
-                                <input type="number" name="nomor_telepon" id="nomor_telepon" class="form-control" value="{{ old('nomor_telepon') }}">
-                            </div> --}}
 
                             <div class="form-group">
                                 <label for="jenispajak">Jenis Pajak</label>
@@ -55,6 +51,22 @@
                                     @foreach($kategoriPajak as $kategori)
                                         <option value="{{ $kategori->id }}">{{ $kategori->kategoripajak }}</option>
                                     @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nomor_telepon">Nomor Telepon</label>
+                                <input type="number" name="nomor_telepon" id="nomor_telepon" class="form-control" value="{{ old('nomor_telepon') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pembagian_zonasi">Pembagian Zonasi</label>
+                                <select name="pembagian_zonasi" id="pembagian_zonasi" class="form-control">
+                                    <option value="">- Pilih -</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
                                 </select>
                             </div>
 

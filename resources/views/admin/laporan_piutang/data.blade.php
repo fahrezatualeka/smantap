@@ -88,6 +88,8 @@
                     {{-- <th>Nomor Telepon</th> --}}
                     <th>Jenis Pajak</th>
                     <th>Kategori Pajak</th>
+                    <th>Nomor Telepon</th>
+                    <th>Pembagian Zonasi</th>
                     <th>Jumlah Penagihan</th>
                     <th>Periode</th>
                 </tr>
@@ -106,6 +108,8 @@
                     <td>{{ $piutang->npwpd }}</td>
                     <td>{{ $piutang->jenisPajak->jenispajak ?? 'N/A' }}</td>
                     <td>{{ $piutang->kategoriPajak->kategoripajak ?? 'N/A' }}</td>
+                    <td>{{ $piutang->nomor_telepon }}</td>
+                    <td>{{ $piutang->pembagian_zonasi }}</td>
                     <td>Rp{{ number_format((float) $piutang->jumlah_penagihan, 0, ',', '.') }}</td>
                     <td>{{ $piutang->periode }}</td>
                 </tr>
