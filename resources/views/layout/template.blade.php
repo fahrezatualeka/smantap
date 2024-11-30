@@ -252,6 +252,7 @@
                     {{-- PETUGAS PENAGIHAN --}}
                     @case('petugas_penagihan')
                     <ul class="sidebar-menu" data-widget="tree">
+                        <li class="header">MANAJEMEN DATA</li>
                         <li class="{{ request()->is('data_penagihan') ? 'active' : '' }}">
                             <a href="{{ url('data_penagihan') }}">
                                 <i class="fa fa-file"></i> <span>Data Penagihan</span>
@@ -263,6 +264,7 @@
                     {{-- PIMPINAN --}}
                     @case('pimpinan')
                     <ul class="sidebar-menu" data-widget="tree">
+                        <li class="header">MANAJEMEN DATA</li>
                         <li class="{{ request()->is('dashboard_pimpinan') ? 'active' : '' }}">
                             <a href="{{ url('dashboard_pimpinan') }}">
                                 <i class="fa fa-house"></i> <span>Dashboard</span>

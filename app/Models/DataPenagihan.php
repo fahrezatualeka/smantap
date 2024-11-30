@@ -15,14 +15,15 @@ class DataPenagihan extends Model
         'nama_pajak',
         'alamat',
         'npwpd',
-        'nomor_telepon',
         'jenis_pajak_id', // Harus menggunakan jenis_pajak_id
         'kategori_pajak_id', // Harus menggunakan kategori_pajak_id
+        'nomor_telepon', // Harus menggunakan kategori_pajak_id
+        'pembagian_zonasi',
         'jumlah_penagihan',
         'periode',
-        'pembagian_zonasi',
         'buktipembayaran',
         'buktivisit',
+        // 'tempat_pembayaran',
         'status',
     ];
 
@@ -39,6 +40,11 @@ class DataPenagihan extends Model
     public function dataPiutang()
     {
         return $this->belongsTo(DataPiutang::class, 'npwpd', 'npwpd');
+    }
+
+    public function petugasPenagihan()
+    {
+        return $this->belongsTo(User::class, 'pembagian_zonasi', 'pembagian_zonasi');
     }
 
     public function laporanPelunasan()

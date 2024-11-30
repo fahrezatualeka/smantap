@@ -310,4 +310,27 @@ public function exportPdf()
     // Unduh file PDF
     return $pdf->download('data_piutang.pdf');
 }
+
+public function filter(Request $request)
+{
+    $query = LaporanPiutang::query();
+    
+    if ($request->has('jenis_pajak_id') && $request->jenis_pajak_id != '') {
+        $query->where('jenis_pajak_id', $request->jenis_pajak_id);
+    }
+
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nama_pajak', 'LIKE', '%' . $search . '%')
+              ->orWhere('alamat', 'LIKE', '%' . $search . '%');
+        });
+    }
+    
+    // $dataPelunasan = $query->get();
+    $laporanPiutang = $query->orderBy('created_at', 'desc')->get();
+
+    
+    return view('admin.laporan_piutang.data', compact('laporanPiutang'));
+}
 }

@@ -105,9 +105,10 @@
                     {{-- <th>Nomor Telepon</th> --}}
                     <th>Jenis Pajak</th>
                     <th>Kategori Pajak</th>
+                    <th>Nomor Telepon</th>
+                    <th>Pembagian Zonasi</th>
                     <th>Jumlah Penagihan</th>
                     <th>Periode</th>
-                    <th>Pembagian Zonasi</th>
                 </tr>
             </thead>
             <tbody>
@@ -125,9 +126,11 @@
                     {{-- <td>{{ $datapiutang->nomor_telepon }}</td> --}}
                     <td>{{ $datapiutang->jenisPajak->jenispajak ?? '-' }}</td>
                     <td>{{ $datapiutang->kategoriPajak->kategoripajak ?? '-' }}</td>
+                    <td>{{ $datapiutang->nomor_telepon }}</td>
+                    <td>{{ $datapiutang->pembagian_zonasi }}</td>
                     <td>Rp{{ number_format((float) $datapiutang->jumlah_penagihan, 0, ',', '.') }}</td>
                     <td>{{ $datapiutang->periode }}</td>
-                    <td>
+                    {{-- <td>
                         @if(is_null($datapiutang->pembagian_zonasi))
                             <select name="pembagian_zonasi[{{ $datapiutang->id }}]" class="form-control">
                                 <option value="">- Pilih -</option>
@@ -140,7 +143,7 @@
                         @else
                             <p>{{ $datapiutang->pembagian_zonasi }}</p>
                         @endif
-                    </td>
+                    </td> --}}
                 </tr>
                 @endforeach
                 @endif

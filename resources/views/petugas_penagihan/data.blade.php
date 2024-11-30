@@ -52,7 +52,7 @@
 <div class="box">
     <div class="box-header with-border">
         <h3 class="box-title">
-            Data Penagihan (Pembagian Zonasi {{ Auth::user()->pembagian_zonasi ?? 'Tidak Ditentukan' }})
+            Data Penagihan (Zonasi {{ Auth::user()->pembagian_zonasi ?? 'Tidak Ditentukan' }})
         </h3>
     </div>
 
@@ -64,10 +64,8 @@
                     <th>Nama Pajak</th>
                     <th>Alamat</th>
                     <th>NPWPD</th>
-                    {{-- <th>Nomor Telepon</th> --}}
                     <th>Jenis Pajak</th>
                     <th>Kategori Pajak</th>
-                    {{-- <th>Tanggal Tagihan</th> --}}
                     <th>Nomor Telepon</th>
                     <th>Pembagian Zonasi</th>
                     <th>Jumlah Penagihan</th>
@@ -89,9 +87,8 @@
                     <td>{{ $piutang->nama_pajak }}</td>
                     <td>{{ $piutang->alamat }}</td>
                     <td>{{ $piutang->npwpd }}</td>
-                    {{-- <td>{{ $piutang->nomor_telepon }}</td> --}}
                     <td>{{ $piutang->jenisPajak->jenispajak ?? 'N/A' }}</td>
-                    <td>{{ $piutang->kategoriPajak->kategoripajak ?? 'N/A' }}</td>                    
+                    <td>{{ $piutang->kategoriPajak->kategoripajak ?? 'N/A' }}</td>
                     <td>{{ $piutang->nomor_telepon }}</td>
                     <td>{{ $piutang->pembagian_zonasi }}</td>
                     <td>Rp{{ number_format((float) $piutang->jumlah_penagihan, 0, ',', '.') }}</td>
@@ -193,11 +190,12 @@
     </div>
     <br>
     <div class="box-footer text-left">
-        <a href="" class="btn bg-black" target="_blank">
+        <a href="{{ route('data_penagihan.exportExcel') }}" class="btn bg-black">
             <i class="fa-solid fa-file-excel"></i> Export Excel
         </a>
-        <a href="" class="btn bg-black" target="_blank">
-            <i class="fa-solid fa-file-pdf"></i> Export Pdf
+        
+        <a href="{{ route('data_penagihan.exportPdf') }}" class="btn bg-black">
+            <i class="fa-solid fa-file-pdf"></i> Export PDF
         </a>
     </div>
 </div>

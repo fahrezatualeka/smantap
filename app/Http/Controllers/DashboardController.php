@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\DataPiutang;
+// use App\Models\DataPiutang;
 use App\Models\DataZonasi;
 use App\Models\DataWajibPajak;
 use App\Models\DataPenagihan;
@@ -10,6 +10,7 @@ use App\Models\KategoriPajak;
 use App\Models\JenisPajak;
 use App\Models\LaporanPelunasan;
 use App\Models\LaporanPenagihan;
+use App\Models\LaporanPiutang;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -44,7 +45,7 @@ class DashboardController extends Controller
 
         
         // $datapiutang = DataPiutang::count();
-        $jumlah_piutang_tahun = DataPiutang::whereYear('created_at', date('Y'))->sum('jumlah_penagihan');
+        $jumlah_piutang_tahun = LaporanPiutang::whereYear('created_at', date('Y'))->sum('jumlah_penagihan');
         // $jumlah_piutang_bulan = DataPiutang::whereYear('created_at', date('m'))->sum('jumlah_penagihan');
         
         

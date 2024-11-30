@@ -46,7 +46,7 @@
     </div>
 
     
-    {{-- <div class="box-body">
+    <div class="box-body">
         <form action="{{ route('admin.laporan_piutang.filter') }}" method="GET" id="filterForm">
             <div class="row">
                 <!-- Filter Pencarian -->
@@ -65,6 +65,17 @@
                         <option value="3" {{ request()->jenis_pajak_id == '3' ? 'selected' : '' }}>Hiburan</option>
                     </select>
                 </div>
+    
+                <!-- Filter Kategori Pajak (jika ada) -->
+                {{-- <div class="col-md-2">
+                    <label for="kategori_pajak_id">Kategori Pajak:</label>
+                    <select name="kategori_pajak_id" class="form-control" id="kategori_pajak_id">
+                        <option value="">- Semua -</option>
+                        <!-- Menambahkan pilihan kategori pajak jika perlu -->
+                        <option value="1" {{ request()->kategori_pajak_id == '1' ? 'selected' : '' }}>Kategori 1</option>
+                        <option value="2" {{ request()->kategori_pajak_id == '2' ? 'selected' : '' }}>Kategori 2</option>
+                    </select>
+                </div> --}}
         
                 <!-- Button Filter -->
                 <div class="col-md-2">
@@ -74,7 +85,7 @@
                 </div>
             </div>
         </form>
-    </div> --}}
+    </div>
     
 
     <div class="box-body table-responsive">
@@ -85,7 +96,6 @@
                     <th>Nama Pajak</th>
                     <th>Alamat</th>
                     <th>NPWPD</th>
-                    {{-- <th>Nomor Telepon</th> --}}
                     <th>Jenis Pajak</th>
                     <th>Kategori Pajak</th>
                     <th>Nomor Telepon</th>
@@ -133,15 +143,16 @@
             </tbody>
         </table>
     </div>
-    {{-- <br>
+    <br>
     <div class="box-footer text-left">
-        <a href="" class="btn bg-black" target="_blank">
+        <a href="{{ route('admin.laporan_piutang.exportExcel') }}" class="btn bg-black">
             <i class="fa-solid fa-file-excel"></i> Export Excel
         </a>
-        <a href="" class="btn bg-black" target="_blank">
-            <i class="fa-solid fa-file-pdf"></i> Export Pdf
+        
+        <a href="{{ route('admin.laporan_piutang.exportPdf') }}" class="btn bg-black">
+            <i class="fa-solid fa-file-pdf"></i> Export PDF
         </a>
-    </div> --}}
+    </div>
 </div>
 </section>
 @endsection

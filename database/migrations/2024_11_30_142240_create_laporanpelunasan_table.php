@@ -26,9 +26,8 @@ return new class extends Migration
             $table->date('tanggal_pembayaran');
             $table->string('buktipembayaran')->nullable();
             $table->string('buktivisit')->nullable();
-            // $table->enum('tempat_pembayaran', ['Admin', 'Petugas Penagihan']);
-            // $table->string('tempat_pembayaran')->nullable();
-            $table->enum('tempat_pembayaran', ['Admin', 'Petugas Penagihan'])->nullable();
+            // $table->enum('tempat_pembayaran', ['Admin', 'Petugas Penagihan'])->nullable();
+            $table->string('tempat_pembayaran', 255)->nullable();            
             $table->timestamps();
         });
     }

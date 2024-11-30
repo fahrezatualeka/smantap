@@ -54,5 +54,9 @@ class User extends Authenticatable
 {
     return $this->hasMany(DataPiutang::class, 'pembagian_zonasi', 'pembagian_zonasi');
 }
+public function dataPenagihan()
+{
+    return $this->hasMany(DataPenagihan::class, 'pembagian_zonasi', 'pembagian_zonasi');
+}
 
 }

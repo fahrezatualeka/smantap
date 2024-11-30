@@ -61,7 +61,8 @@ class DataUserController extends Controller
             'nomor_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
             'role' => 'required|in:admin,petugas_penagihan,pimpinan',
-            'pembagian_zonasi' => 'nullable|integer|exists:zonasi,id', // Pastikan zonasi ada jika diperlukan
+            // 'pembagian_zonasi' => 'nullable|integer|exists:zonasi,id',
+            'pembagian_zonasi' => 'nullable|integer',
         ]);
     
         $data['password'] = Hash::make($data['password']);

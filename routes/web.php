@@ -84,6 +84,8 @@ Route::post('/profile/petugas_penagihan/update', [ProfileController::class, 'upd
 Route::post('/data_penagihan/upload/{id}', [DataPenagihanController::class, 'uploadBuktiPembayaran'])->name('data_penagihan.upload');
 // Route::patch('data_penagihan/{id}/update-status', [DataPenagihanController::class, 'markAsPaid'])->name('data_penagihan.updateStatus');
 Route::put('/data_penagihan/{id}/update-status', [DataPenagihanController::class, 'markAsPaid'])->name('data_penagihan.updateStatus');
+Route::get('data_penagihan/exportExcel', [DataPenagihanController::class, 'exportExcel'])->name('data_penagihan.exportExcel');
+Route::get('data_penagihan/exportPdf', [DataPenagihanController::class, 'exportPdf'])->name('data_penagihan.exportPdf');
 
 
 
@@ -162,6 +164,8 @@ Route::group(['middleware' => ['role:admin']], function () {
     // PIUTANG
     Route::get('/laporan_piutang', [LaporanPiutangController::class, 'index'])->name('admin.laporan_piutang.data');
     Route::get('/laporan_piutang/filter', [LaporanPiutangController::class, 'filter'])->name('admin.laporan_piutang.filter');
+    Route::get('laporan_piutang/exportExcel', [LaporanPiutangController::class, 'exportExcel'])->name('admin.laporan_piutang.exportExcel');
+    Route::get('laporan_piutang/exportPdf', [LaporanPiutangController::class, 'exportPdf'])->name('admin.laporan_piutang.exportPdf');
 
 
 

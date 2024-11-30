@@ -3,7 +3,7 @@
 
 <style>
     .table-responsive {
-        max-height: 465px;
+        max-height: 460px;
         /* max-height: 375px; */
         overflow-y: auto;
         }
@@ -156,7 +156,7 @@
                         <th>Pembagian Zonasi</th>
                         {{-- <th>Tanggal Tagihan</th> --}}
                         {{-- <th>Jumlah Piutang</th> --}}
-                        <th style="width: 124px">Aksi</th>
+                        {{-- <th style="width: 124px">Aksi</th> --}}
                         {{-- <th style="width: 0px">Aksi</th> --}}
                         {{-- <th style="width: 0px">Pelunasan</th> --}}
                         {{-- <th>wa</th> --}}
@@ -236,7 +236,7 @@
                             @endif
                         </td> --}}
                         
-                        <td>
+                        {{-- <td>
                             <a href="{{ url('data_wajibpajak/edit/'.$datawajibpajak->id) }}" class="btn bg-green btn-xs">
                                 <i class="fa fa-pencil"></i> Edit
                             </a>
@@ -249,7 +249,7 @@
                             </form>
                             
                             
-                        </td>
+                        </td> --}}
                         {{-- <td>
                             @if($datawajibpajak->status_lunas == 'Lunas')
                                 Lunas

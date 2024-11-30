@@ -178,8 +178,7 @@
                         </a>
                     </div> --}}
 
-                    <div class="col-lg-4">
-                        {{-- <div class="col-md-6"> --}}
+                    {{-- <div class="col-lg-4">
                             <div class="box">
                                 <div class="box-header with-border">
                                     <b class="box-title">Diagram Batang </b>
@@ -188,17 +187,18 @@
                                     <canvas id="barChart" width="50" height="50"></canvas>
                                 </div>
                             </div>
-                        {{-- </div> --}}
-                    </div>
-                    <div class="col-lg-4">
+                    </div> --}}
+                    <div class="col-lg-8">
                         {{-- <div class="col-md-6"> --}}
                             <div class="box">
                                 <div class="box-header with-border">
                                     <b class="box-title">Diagram Grafik Pembayaran Pajak</b>
                                 </div>
                                 <div class="box-body">
-                                    <canvas id="lineChart" width="50" height="50"></canvas>
+                                    <canvas id="lineChart" width="100" height="45"></canvas>
+                                    
                                 </div>
+                                <p style="text-align: center">Tahun 2024</p>
                             </div>
                         {{-- </div> --}}
                     </div>
@@ -291,11 +291,44 @@
 //     document.getElementById('PieChart'),
 //     config
 // );
-
       // Data Dummy
-      const labels = ['Jenis Pajak A', 'Jenis Pajak B', 'Jenis Pajak C'];
-        const data = [30, 50, 20];
+      const labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const dataPiutang = [0, 0, 0, 0, 0, 0, 0, 0, 250000, -5000000, 45000000, 0]; // Data untuk Piutang Pajak
+const dataPelunasan = [0, 0, 0, 0, 0, 0, 0, 0, -250000, 5000000, 4000000, 0]; // Data untuk Pelunasan Pajak
 
+// Diagram Garis
+const lineCtx = document.getElementById('lineChart').getContext('2d');
+new Chart(lineCtx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Piutang Pajak',
+                data: dataPiutang,
+                borderColor: '#36A2EB',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                fill: true,
+            },
+            {
+                label: 'Pelunasan Pajak',
+                data: dataPelunasan,
+                borderColor: '#FF5733',
+                backgroundColor: 'rgba(255, 87, 51, 0.2)',
+                fill: true,
+            }
+        ]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+const data = [0, 0, 0, 0, 0, 0, 0, 0, 0, -5000000, 45000000, 0];
         // Diagram Pie
         const pieCtx = document.getElementById('pieChart').getContext('2d');
         new Chart(pieCtx, {
@@ -311,48 +344,25 @@
         });
 
         // Diagram Batang
-        const barCtx = document.getElementById('barChart').getContext('2d');
-        new Chart(barCtx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Jumlah Pajak (dalam juta)',
-                    data: data,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Diagram Garis
-        const lineCtx = document.getElementById('lineChart').getContext('2d');
-        new Chart(lineCtx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Tren Pajak Bulanan',
-                    data: data,
-                    borderColor: '#36A2EB',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    fill: true,
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        // const barCtx = document.getElementById('barChart').getContext('2d');
+        // new Chart(barCtx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: labels,
+        //         datasets: [{
+        //             label: 'Jumlah Pajak (dalam juta)',
+        //             data: data,
+        //             backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
 </script>
 
 @endsection

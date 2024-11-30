@@ -16,7 +16,7 @@ class LaporanPelunasanController extends Controller
     {
         // $dataPelunasan = LaporanPelunasan::all();
         $dataPelunasan = LaporanPelunasan::with(['jenisPajak', 'kategoriPajak'])
-        ->orderBy('created_at', 'desc') // Urutkan berdasarkan created_at secara menurun
+        ->orderBy('created_at', 'desc')
         ->get();
     
         return view('admin.laporan_pelunasan.data', compact('dataPelunasan'));

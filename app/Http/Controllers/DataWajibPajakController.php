@@ -23,13 +23,12 @@ class DataWajibPajakController extends Controller
     {
         // Ambil data dengan relasi dan urutkan berdasarkan data terbaru
         $data = DataWajibPajak::with(['jenisPajak', 'kategoriPajak'])
-            ->orderBy('created_at', 'desc') // Urutkan berdasarkan created_at secara menurun
-            ->get();
+        // ->orderBy('created_at', 'desc')
+        ->get();
     
-        $jumlahData = $data->count(); // Hitung jumlah data setelah filter diterapkan
-    
-        return view('admin.data_wajibpajak.data', compact('data', 'jumlahData'));
+        return view('admin.data_wajibpajak.data', compact('data'));
     }
+
 
     public function import(Request $request)
 {
@@ -253,7 +252,8 @@ class DataWajibPajakController extends Controller
         }
     
         // Tambahkan pengurutan berdasarkan data terbaru
-        $data = $query->orderBy('created_at', 'desc')->get();
+        // $data = $query->orderBy('created_at', 'desc')->get();
+        $data = $query->get();
     
         return view('admin.data_wajibpajak.data', compact('data'));
     }
@@ -369,16 +369,20 @@ class DataWajibPajakController extends Controller
     
     public function exportPdf()
     {
+        // Mengambil data Wajib Pajak dengan relasi
         $dataWajibPajak = DataWajibPajak::with(['jenisPajak', 'kategoriPajak'])
             ->orderBy('created_at', 'desc') // Urutkan berdasarkan created_at secara menurun
             ->get();
     
-        $jumlahData = $dataWajibPajak->count(); // Hitung jumlah data setelah filter diterapkan
+        // Pastikan data yang dikirim valid
+        if ($dataWajibPajak->isEmpty()) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan!');
+        }
     
         // Kirim data ke view khusus untuk PDF
-        $pdf = Pdf::loadView('admin.data_wajibpajak.pdf', compact('dataWajibPajak'));
+        $pdf = Pdf::loadView('admin.data_wajibpajak.pdf', ['dataWajibPajak' => $dataWajibPajak]);
     
         // Unduh file PDF
-        return $pdf->download('data_wajibpajak.pdf');
+        return $pdf->download('data_wajib_pajak.pdf');
     }
 }

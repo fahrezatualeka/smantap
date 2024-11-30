@@ -3,8 +3,8 @@
 
 <style>
     .table-responsive {
-        /* max-height: 600px; */
-        max-height: 525px;
+        max-height: 632px;
+        /* max-height: 525px; */
         overflow-y: auto;
         }
 </style>
@@ -74,7 +74,7 @@
                         <th>Nama Jenis Pajak</th>
                         <th>Nama Kategori Pajak</th>
                         {{-- <th style="width: 124px">Aksi</th> --}}
-                        <th style="width: 0px">Aksi</th>
+                        {{-- <th style="width: 0px">Aksi</th> --}}
                     </tr>
                 </thead>
 
@@ -89,18 +89,18 @@
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $kategoriPajak->JenisPajak->jenispajak ?? 'N/A' }}</td>
                         <td>{{ $kategoriPajak->kategoripajak }}</td>
-                        <td>
+                        {{-- <td>
                             <a href="{{ route('admin.kategori_pajak.edit', $kategoriPajak->id) }}" class="btn btn-success btn-xs">
                                 <i class="fa fa-pencil"></i> Edit
                             </a>
-                            {{-- <form action="{{ route('admin.kategori_pajak.delete', $kategoriPajak->id) }}" method="POST" style="display: inline-block;">
+                            <form action="{{ route('admin.kategori_pajak.delete', $kategoriPajak->id) }}" method="POST" style="display: inline-block;">
                                 @csrf
                                 @method('delete')
                                 <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Apakah anda yakin ingin menghapus data?')">
                                     <i class="fa fa-trash"></i> Hapus
                                 </button>
-                            </form> --}}
-                        </td>
+                            </form>
+                        </td> --}}
                     </tr>
                     @endforeach
                     

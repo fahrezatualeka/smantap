@@ -40,6 +40,8 @@
                 <th>NPWPD</th>
                 <th>Jenis Pajak</th>
                 <th>Kategori Pajak</th>
+                <th>Nomor Telepon</th>
+                <th>Pembagian Zonasi</th>
                 {{-- <th>Jumlah Penagihan</th> --}}
                 {{-- <th>Periode</th> --}}
                 {{-- <th>Status</th> --}}
@@ -54,6 +56,8 @@
                     <td>{{ $datawajibpajak->npwpd }}</td>
                     <td>{{ $datawajibpajak->jenisPajak->jenispajak ?? '-' }}</td>
                     <td>{{ $datawajibpajak->kategoriPajak->kategoripajak ?? '-' }}</td>
+                    <td>{{ $datawajibpajak->nomor_telepon }}</td>
+                    <td>{{ $datawajibpajak->pembagian_zonasi }}</td>
                     {{-- <td>{{ $penetapan->status }}</td> --}}
                 </tr>
             @endforeach

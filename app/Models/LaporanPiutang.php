@@ -17,6 +17,8 @@ class LaporanPiutang extends Model
         'npwpd',
         'jenis_pajak_id',
         'kategori_pajak_id',
+        'nomor_telepon',
+        'pembagian_zonasi',
         'jumlah_penagihan',
         'periode',
     ];

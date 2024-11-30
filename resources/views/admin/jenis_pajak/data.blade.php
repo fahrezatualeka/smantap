@@ -38,7 +38,7 @@
                         <th>No</th>
                         <th>Nama Jenis Pajak</th>
                         {{-- <th style="width: 124px">Aksi</th> --}}
-                        <th style="width: 0px">Aksi</th>
+                        {{-- <th style="width: 0px">Aksi</th> --}}
                     </tr>
                 </thead>
 
@@ -52,18 +52,18 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $jenisPajak->jenispajak }}</td>
-                        <td>
+                        {{-- <td>
                             <a href="{{ route('admin.jenis_pajak.edit', $jenisPajak->id) }}" class="btn btn-success btn-xs">
                                 <i class="fa fa-pencil"></i> Edit
                             </a>
-                            {{-- <form action="{{ route('admin.jenis_pajak.delete', $jenisPajak->id) }}" method="POST" style="display: inline-block;">
+                            <form action="{{ route('admin.jenis_pajak.delete', $jenisPajak->id) }}" method="POST" style="display: inline-block;">
                                 @csrf
                                 @method('delete')
                                 <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Apakah anda yakin ingin menghapus data?')">
                                     <i class="fa fa-trash"></i> Hapus
                                 </button>
-                            </form> --}}
-                        </td>
+                            </form>
+                        </td> --}}
                     </tr>
                     @endforeach
                     @endif

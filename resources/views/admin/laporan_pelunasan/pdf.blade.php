@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 10px;
         }
         h2 {
             text-align: center;
@@ -32,34 +32,38 @@
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Nama Pajak</th>
-                <th>Alamat</th>
-                <th>NPWPD</th>
-                <th>Jenis Pajak</th>
-                <th>Kategori Pajak</th>
-                <th>Jumlah Penagihan</th>
+                <th style="text-align: center">No</th>
+                <th style="text-align: center">Nama Pajak</th>
+                <th style="text-align: center">Alamat</th>
+                <th style="text-align: center">NPWPD</th>
+                <th style="text-align: center">Jenis Pajak</th>
+                <th style="text-align: center">Kategori Pajak</th>
+                <th style="text-align: center">Nomor Telepon</th>
+                <th style="text-align: center">Pembagian Zonasi</th>
+                <th style="text-align: center">Jumlah Penagihan</th>
+                <th style="text-align: center">Periode</th>
                 {{-- <th>Jumlah Pembayaran</th> --}}
-                <th>Tanggal Pembayaran  </th>
-                <th>Tempat Pembayaran</th>
-                {{-- <th>Periode</th> --}}
+                <th style="text-align: center">Tanggal Pembayaran  </th>
+                <th style="text-align: center">Tempat Pembayaran</th>
                 {{-- <th>Status</th> --}}
             </tr>
         </thead>
         <tbody>
             @foreach($laporanPelunasan as $index => $pelunasan)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $pelunasan->nama_pajak }}</td>
-                    <td>{{ $pelunasan->alamat }}</td>
-                    <td>{{ $pelunasan->npwpd }}</td>
-                    <td>{{ $pelunasan->jenisPajak->jenispajak ?? '-' }}</td>
-                    <td>{{ $pelunasan->kategoriPajak->kategoripajak ?? '-' }}</td>
-                    <td>Rp{{ number_format($pelunasan->jumlah_penagihan, 0, ',', '.') }}</td>
+                    <td style="text-align: center">{{ $index + 1 }}</td>
+                    <td style="text-align: center">{{ $pelunasan->nama_pajak }}</td>
+                    <td style="text-align: center">{{ $pelunasan->alamat }}</td>
+                    <td style="text-align: center">{{ $pelunasan->npwpd }}</td>
+                    <td style="text-align: center">{{ $pelunasan->jenisPajak->jenispajak ?? '-' }}</td>
+                    <td style="text-align: center">{{ $pelunasan->kategoriPajak->kategoripajak ?? '-' }}</td>
+                    <td style="text-align: center">{{ $pelunasan->nomor_telepon }}</td>
+                    <td style="text-align: center">{{ $pelunasan->pembagian_zonasi }}</td>
+                    <td style="text-align: center">Rp{{ number_format($pelunasan->jumlah_penagihan, 0, ',', '.') }}</td>
+                    <td style="text-align: center">{{ $pelunasan->periode }}</td>
                     {{-- <td>Rp{{ number_format($pelunasan->jumlah_pembayaran, 0, ',', '.') }}</td> --}}
-                    <td>{{ $pelunasan->tanggal_pembayaran }}</td>
-                    <td>{{ $pelunasan->tempat_pembayaran }}</td>
-                    {{-- <td>{{ $pelunasan->periode }}</td> --}}
+                    <td style="text-align: center">{{ $pelunasan->tanggal_pembayaran }}</td>
+                    <td style="text-align: center">{{ $pelunasan->tempat_pembayaran }}</td>
                     {{-- <td>{{ $penetapan->status }}</td> --}}
                 </tr>
             @endforeach

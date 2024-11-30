@@ -131,17 +131,6 @@
 
                     <td>{{ $pelunasan->tanggal_pembayaran }}</td>
                     
-                    <td>
-                        @if($pelunasan->buktivisit)
-                        <a href="javascript:void(0);" 
-                        class="btn btn-warning btn-xs" 
-                        onclick="showImageProof('{{ route('admin.laporan_pelunasan.showVisitProof', $pelunasan->id) }}', 'Bukti Visit')">
-                        <i class="fa-solid fa-eye"></i> Lihat
-                    </a>
-                    @else
-                    <span>Tidak ada</span>
-                    @endif
-                </td>
                 <td>
                     @if($pelunasan->buktipembayaran)
                     <a href="javascript:void(0);" 
@@ -153,6 +142,17 @@
                 <span>Tidak ada</span>
                 @endif
             </td>
+            <td>
+                @if($pelunasan->buktivisit)
+                <a href="javascript:void(0);" 
+                class="btn btn-warning btn-xs" 
+                onclick="showImageProof('{{ route('admin.laporan_pelunasan.showVisitProof', $pelunasan->id) }}', 'Bukti Visit')">
+                <i class="fa-solid fa-eye"></i> Lihat
+            </a>
+            @else
+            <span>Tidak ada</span>
+            @endif
+        </td>
             <td>{{ $pelunasan->tempat_pembayaran }}</td>
 
 

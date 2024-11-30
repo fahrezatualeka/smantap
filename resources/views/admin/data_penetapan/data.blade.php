@@ -6,7 +6,7 @@
 
 <style>
     .table-responsive {
-        max-height: 375px;
+        max-height: 366px;
         /* max-height: 280px; */
         overflow-y: auto;
         }
@@ -175,7 +175,7 @@
                     {{-- <th>Bukti</th> --}}
                     {{-- <th>Bukti Pembayaran</th> --}}
                     {{-- <th style="width: 180px">Aksi</th> --}}
-                    <th style="width: 124px">Aksi</th>
+                    {{-- <th style="width: 124px">Aksi</th> --}}
                 </tr>
         </thead>
             <tbody>
@@ -281,7 +281,7 @@
 
 
                     
-                    <td>
+                    {{-- <td>
                          
                         <a href="{{ route('admin.data_penetapan.edit', $penetapan->id) }}" class="btn btn-success btn-xs">
                             <i class="fa fa-pencil"></i> Edit
@@ -293,7 +293,7 @@
                                 <i class="fa fa-trash"></i> Hapus
                             </button>
                         </form>
-                    </td>
+                    </td> --}}
                 </tr>
                 </tr>
                 @endforeach
