@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Mengunci versi runner ke ubuntu-22.04
     steps:
       # Checkout kode dari repository GitHub
       - name: Checkout Code
@@ -15,7 +15,7 @@ jobs:
 
       # Upload file ke FTP server
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.5.0
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.0  # Menggunakan versi v4.3.0
         with:
           server: "145.223.108.104"  # IP server FTP Anda
           username: "u741610542"     # Username FTP Anda
