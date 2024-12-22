@@ -1,0 +1,24 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - main  # Jalankan workflow setiap kali ada push ke branch "main"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout kode dari repository GitHub
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Upload file ke FTP server
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.5.0
+        with:
+          server: "145.223.108.104"  # IP server FTP Anda
+          username: "u741610542"     # Username FTP Anda
+          password: ${{ secrets.FTP_PASSWORD }}  # Password FTP diatur sebagai secret
+          local-dir: "./"            # Direktori lokal (proyek Anda)
+          server-dir: "/domains/smantap.com/public_html"  # Path direktori di server
