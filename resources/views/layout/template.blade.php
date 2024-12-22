@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SMANTAPP | Pemerintah Kota Ambon</title>
+    <title>SMANTAP | BAPENDA Kota Ambon</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-    <link rel="icon" type="image/x-icon" href="{{ asset('uploads/logo.png') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/uploads/logo.png') }}"/>
 
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH">
+    
     {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> --}}
 
         <!-- Tambahkan jQuery dan jQuery UI -->
@@ -33,20 +34,7 @@
 
     {{-- Notif Mengembang --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <style>
-        .navbar-custom-menu .nav-link,
-        .navbar-custom-menu .dropdown-menu a {
-            font-size: 10px; 
-        }
-    
-        .navbar-custom-menu .nav-item .badge {
-    font-size: 10px; 
-        }
-    
-    .navbar-custom-menu .dropdown-toggle {
-            font-size: 10px;
-        }
-    
+    <style>    
         .navbar-custom-menu i {
             font-size: 14px;
         }
@@ -69,9 +57,8 @@
                     : route('pimpinan.index')) 
             }}" class="logo">
                 <span class="logo-mini"><b>STP</b></span>
-                <span class="logo-lg"> <b> SMANTAPP </b></span>
+                <span class="logo-lg"> <b>S    M   A   N   T   A   P</b></span>
             </a>
-            
             
             <nav class="navbar navbar-static-top">
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -83,12 +70,12 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         {{-- Kalender --}}
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link">
                                 <i class="fa-solid fa-calendar-days"></i> 
                                 {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
                             </a>
-                        </li>
+                        </li> --}}
                         
 
                         {{-- Notif --}}
@@ -122,7 +109,12 @@
                                 <li class="user-body">
                                     <div class="row">
                                         <div class="col-xs-12 text-center">
-                                            <a href="{{ url('/profil') }}">
+                                            <a href="{{ 
+                                                auth()->user()->role == 'admin' 
+                                                ? route('admin.profil') 
+                                                : (auth()->user()->role == 'petugas_penagihan' 
+                                                    ? route('petugas_penagihan.profil') 
+                                                    : route('pimpinan.profil')) }}">
                                                 <i class="fa-solid fa-user"></i> 
                                                 Lihat Profil Akun
                                             </a>
@@ -152,7 +144,7 @@
     <section class="sidebar">
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{ asset('uploads/logo.png') }}" class="light-logo" alt="logo" width="50%">
+                <img src="{{ asset('storage/uploads/logo.png') }}" class="light-logo" alt="logo" width="50%">
             </div>
             <div class="pull-left info">
                 <p align="left">Sistem Aplikasi<br>Penagihan Piutang Pajak</p>
@@ -181,18 +173,58 @@
                                 </a>
                             </li>
         
-                            <li class="{{ request()->is('data_penetapan') ? 'active' : '' }}">
-                                <a href="{{ url('data_penetapan') }}">
-                                    <i class="fa fa-money-bill"></i>
-                                    <span>Data Penetapan</span>
+                            <li class="{{ request()->is('data_piutang') ? 'active' : '' }}">
+                                <a href="{{ url('data_piutang') }}">
+                                <i class="fa fa-file-invoice-dollar"></i>
+                                <span>Data Piutang</span>
                                 </a>
                             </li>
-                            {{-- <li class="{{ request()->is('data_piutang') ? 'active' : '' }}">
-                                <a href="{{ url('data_piutang') }}">
-                                    <i class="fa fa-money-bill-1"></i>
-                                    <span>Data Piutang</span>
+
+                            {{-- <li class="treeview {{ in_array(request()->segment(1), ['laporan_transfer', 'laporan_tunai', 'laporan_konfirmasi']) ? 'menu-open active' : '' }}">
+                                <a href="#">
+                                    <i class="fa fa-file-invoice-dollar"></i> <span>Laporan Pengecekan</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
                                 </a>
+                                <ul class="treeview-menu" style="{{ in_array(request()->segment(1), ['laporan_transfer', 'laporan_transfer', 'laporan_konfirmasi']) ? 'display: block;' : '' }}">
+                                    <li class="{{ request()->segment(1) == 'laporan_transfer' ? 'active' : '' }}">
+                                        <a href="{{ url('laporan_transfer') }}"><i class="fa fa-dot-circle-o"></i>Transfer</a>
+                                    </li>
+                                    <li class="{{ request()->segment(1) == 'laporan_tunai' ? 'active' : '' }}">
+                                        <a href="{{ url('laporan_tunai') }}"><i class="fa fa-dot-circle-o"></i>Tunai</a>
+                                    </li>
+                                    <li class="{{ request()->segment(1) == 'laporan_konfirmasi' ? 'active' : '' }}">
+                                        <a href="{{ url('laporan_konfirmasi') }}"><i class="fa fa-dot-circle-o"></i>Konfirmasi</a>
+                                    </li>
+                                </ul>
+
                             </li> --}}
+
+                            <li class="{{ request()->is('laporan_transfer') ? 'active' : '' }}">
+                                <a href="{{ url('laporan_transfer') }}">
+                                <i class="fa fa-money-bill-transfer"></i>
+                                <span>Transfer WP</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('laporan_tunai') ? 'active' : '' }}">
+                                <a href="{{ url('laporan_tunai') }}">
+                                    <i class="fa fa-handshake"></i>
+                                    <span>Tunai Petugas</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('laporan_konfirmasi') ? 'active' : '' }}">
+                                <a href="{{ url('laporan_konfirmasi') }}">
+                                    <i class="fa fa-clipboard-check"></i>
+                                    <span>Konfirmasi</span>
+                                </a>
+                            </li>
+                            <li class="{{ request()->is('laporan_penutupan') ? 'active' : '' }}">
+                                <a href="{{ url('laporan_penutupan') }}">
+                                    <i class="fa fa-building-lock"></i>
+                                    <span>WP Nonaktif</span>
+                                </a>
+                            </li>
         
                             {{-- <li class="{{ request()->is('data_pelunasan') ? 'active' : '' }}">
                                 <a href="{{ url('data_pelunasan') }}">
@@ -206,7 +238,7 @@
                                     <span>Laporan Penagihan</span>
                                 </a>
                             </li> --}}
-                            <li class="treeview {{ in_array(request()->segment(1), ['laporan_piutang', 'laporan_pelunasan']) ? 'menu-open active' : '' }}">
+                            {{-- <li class="treeview {{ in_array(request()->segment(1), ['laporan_piutang', 'laporan_pelunasan']) ? 'menu-open active' : '' }}">
                                 <a href="#">
                                     <i class="fa fa-file-invoice-dollar"></i> <span>Laporan</span>
                                     <span class="pull-right-container">
@@ -221,11 +253,11 @@
                                         <a href="{{ url('laporan_pelunasan') }}"><i class="fa fa-dot-circle-o"></i>Pelunasan</a>
                                     </li>
                                 </ul>
-                                
-                            </li>
+
+                            </li> --}}
                             <li class="header">PENGATURAN</li>
                             <li class="treeview {{ in_array(request()->segment(1), ['jenis_pajak', 'kategori_pajak']) ? 'menu-open active' : '' }}">
-                                <a href="#">
+                                {{-- <a href="#">
                                     <i class="fa fa-coins"></i> <span>Pajak</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
@@ -238,12 +270,26 @@
                                     <li class="{{ request()->segment(1) == 'kategori_pajak' ? 'active' : '' }}">
                                         <a href="{{ url('kategori_pajak') }}"><i class="fa fa-dot-circle-o"></i>Kategori</a>
                                     </li>
-                                </ul>
+                                </ul> --}}
+
+                                <li class="{{ request()->is('jenis_pajak') ? 'active' : '' }}">
+                                    <a href="{{ url('jenis_pajak') }}">
+                                        <i class="fa fa-database"></i>
+                                        <span>Variabel Pajak</span>
+                                    </a>
+                                </li>
                                 
+                                <li class="{{ request()->is('kelola_pesan_whatsapp') ? 'active' : '' }}">
+                                    <a href="{{ url('kelola_pesan_whatsapp') }}">
+                                        <i class="fa fa-envelope"></i>
+                                        <span>Kelola Pesan</span>
+                                    </a>
+                                </li>
                             </li>
                             <li class="{{ request()->is('data_user') ? 'active' : '' }}">
                                 <a href="{{ url('data_user') }}">
-                                    <i class="fa fa-user"></i> <span>Data User</span>
+                                    <i class="fa fa-user"></i>
+                                    <span>Data User</span>
                                 </a>
                             </li>
                             
@@ -253,11 +299,72 @@
                     @case('petugas_penagihan')
                     <ul class="sidebar-menu" data-widget="tree">
                         <li class="header">MANAJEMEN DATA</li>
-                        <li class="{{ request()->is('data_penagihan') ? 'active' : '' }}">
-                            <a href="{{ url('data_penagihan') }}">
-                                <i class="fa fa-file"></i> <span>Data Penagihan</span>
+                        <li class="{{ request()->is('dashboard_petugaspenagihan') ? 'active' : '' }}">
+                            <a href="{{ url('dashboard_petugaspenagihan') }}">
+                                <i class="fa fa-house"></i> <span>Dashboard</span>
                             </a>
                         </li>
+                        
+                        <li class="{{ request()->is('data_penagihan') ? 'active' : '' }}">
+                            <a href="{{ url('data_penagihan') }}">
+                                <i class="fa fa-file-invoice-dollar"></i>
+                                <span>Data Piutang</span>
+                            </a>
+                        </li>
+
+                            {{-- <li class="treeview {{ in_array(request()->segment(1), ['data_transfer', 'data_tunai', 'data_konfirmasi']) ? 'menu-open active' : '' }}">
+                                <a href="#">
+                                    <i class="fa fa-file-invoice-dollar"></i> <span>Data Pengecekan</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu" style="{{ in_array(request()->segment(1), ['data_transfer', 'data_transfer', 'data_konfirmasi']) ? 'display: block;' : '' }}">
+                                    <li class="{{ request()->segment(1) == 'data_transfer' ? 'active' : '' }}">
+                                        <a href="{{ url('data_transfer') }}"><i class="fa fa-dot-circle-o"></i>Transfer</a>
+                                    </li>
+                                    <li class="{{ request()->segment(1) == 'data_tunai' ? 'active' : '' }}">
+                                        <a href="{{ url('data_tunai') }}"><i class="fa fa-dot-circle-o"></i>Tunai</a>
+                                    </li>
+                                    <li class="{{ request()->segment(1) == 'data_konfirmasi' ? 'active' : '' }}">
+                                        <a href="{{ url('data_konfirmasi') }}"><i class="fa fa-dot-circle-o"></i>Konfirmasi</a>
+                                    </li>
+                                </ul> --}}
+
+                            {{-- </li> --}}
+
+                            
+
+                        <li class="{{ request()->is('data_transfer') ? 'active' : '' }}">
+                            <a href="{{ url('data_transfer') }}">
+                                <i class="fa fa-money-bill-transfer"></i>
+                                <span>Transfer WP</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->is('data_tunai') ? 'active' : '' }}">
+                            <a href="{{ url('data_tunai') }}">
+                                <i class="fa fa-handshake"></i>
+                                <span>Tunai Petugas</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->is('data_konfirmasi') ? 'active' : '' }}">
+                            <a href="{{ url('data_konfirmasi') }}">
+                                <i class="fa fa-clipboard-check"></i>
+                                <span>Konfirmasi</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->is('data_penutupan') ? 'active' : '' }}">
+                            <a href="{{ url('data_penutupan') }}">
+                                <i class="fa fa-building-lock"></i>
+                                <span>WP Nonaktif</span>
+                            </a>
+                        </li>
+                        {{-- <li class="{{ request()->is('data_pelunasan') ? 'active' : '' }}">
+                            <a href="{{ url('data_pelunasan') }}">
+                                <i class="fa fa-file-invoice-dollar"></i> 
+                                <span>Data Pelunasan</span>
+                            </a>
+                        </li> --}}
                     </ul>
                 @break
 
@@ -279,7 +386,6 @@
             @endif
         </section>
     </aside>
-    
 </ul>
 
         <div class="content-wrapper">
@@ -289,10 +395,10 @@
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
                 <b>Versi</b> 2.0
-                {{-- <b>Pemerintah Kota Ambon</b> --}}
             </div>
-        <strong><a href="https://alakasemesta.com" target="blank">
-            <img src="{{ asset('uploads/alakabizgrow.png') }}" class="img-fluid" alt="logo" width="15px" height="15px"> PT Alaka Bizgrow Inovasi</a> 2024
+        <strong><a href="https://alakabizgrow.com" target="blank">
+            <img src="{{ asset('storage/uploads/alakabizgrow.png') }}" width="15px" height="15px">
+            PT Alaka Bizgrow Inovasi</a> 2024
         </strong>
         </footer>
     </div>
@@ -314,6 +420,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+{{-- WEBCAM --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/webcamjs/webcam.min.js"></script>
 
 
     <script>

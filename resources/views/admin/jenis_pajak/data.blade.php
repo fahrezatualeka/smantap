@@ -3,7 +3,8 @@
 @section('content')
 <section class="content-header">
     <h1>
-        <b>Jenis Pajak</b>
+        {{-- <b>Jenis Pajak</b> --}}
+        <b>Variabel Pajak</b>
     </h1>
 </section>
 
@@ -23,7 +24,8 @@
         @endif
         
         <div class="box-header with-border">
-            <h3 class="box-title"> Data Jenis Pajak</h3>
+            {{-- <h3 class="box-title"> Data Jenis Pajak</h3> --}}
+            <h3 class="box-title"> Data Variabel Pajak</h3>
             <div class="pull-right">
                 <a href="{{ route('admin.jenis_pajak.create') }}" class="btn btn-primary">
                     <i class="fa fa-user-plus"></i> Tambah Data

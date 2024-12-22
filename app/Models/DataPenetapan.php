@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class DataPenetapan extends Model
 {
@@ -18,11 +17,13 @@ class DataPenetapan extends Model
         'npwpd',
         'jenis_pajak_id',
         'kategori_pajak_id',
-        'nomor_telepon',
-        'pembagian_zonasi',
         'jumlah_penagihan',
         'periode',
-        'status',
+        'status', 
+        // 'jumlah_pembayaran', 
+        // 'tanggal_pembayaran', 
+        // 'bukti_visit', 
+        // 'bukti_pembayaran'
     ];
 
     public function jenisPajak()
@@ -40,29 +41,11 @@ class DataPenetapan extends Model
         return $this->belongsTo(DataWajibPajak::class, 'npwpd', 'npwpd');
     }
 
-    // public function dataPiutang()
-    // {
-    //     return $this->hasMany(DataPiutang::class, 'npwpd', 'npwpd');
-    // }
-
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::updated(function ($penetapan) {
-    //         // Periksa apakah status berubah menjadi "Sudah Bayar"
-    //         if ($penetapan->isDirty('status') && $penetapan->status === 'Sudah Bayar') {
-    //             // Hapus data terkait di tabel DataPiutang
-    //             $deleted = \App\Models\DataPiutang::where('npwpd', $penetapan->npwpd)
-    //                 ->where('periode', $penetapan->periode)
-    //                 ->delete();
-
-    //             if ($deleted) {
-    //                 Log::info("Data Piutang berhasil dihapus untuk NPWPD: {$penetapan->npwpd} dan Periode: {$penetapan->periode}");
-    //             } else {
-    //                 Log::warning("Tidak ada Data Piutang yang ditemukan untuk NPWPD: {$penetapan->npwpd} dan Periode: {$penetapan->periode}");
-    //             }
-    //         }
-    //     });
-    // }
+    public function piutang()
+    {
+        return $this->hasOne(DataPiutang::class, 'npwpd', 'npwpd');
+    }
+    
+       
+    
 }

@@ -3,89 +3,46 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class FonnteService
 {
-    protected $token;
-    protected $url;
+    protected $client;
 
     public function __construct()
     {
-        $this->token = config('services.fonnte.token');
-        $this->url = config('services.fonnte.url');
+        $this->client = new Client();
     }
 
-    public function sendMessage($to, $message)
+    public function sendMessage($phoneNumber, $message)
     {
         try {
-            $target = '+' . preg_replace('/\D/', '', $to); // memastikan hanya nomor yang digunakan
-            \Log::info('Target Nomor Telepon:', ['target' => $target]);
-    
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->token,
-            ])->post($this->url, [
-                'target' => $target,
-                'message' => $message,
-                'url' => 'https://md.fonnte.com/images/wa-logo.png', 
-                'schedule' => 0,
-                'typing' => false,
-                'delay' => '2',
-                'countryCode' => '62',
+            $response = $this->client->post(config('services.fonnte.url'), [
+                'headers' => [
+                    'Authorization' => config('services.fonnte.token'),
+                ],
+                'form_params' => [
+                    'target' => $phoneNumber,
+                    'message' => $message,
+                    'countryCode' => '62',
+                ],
             ]);
     
-            // Log untuk melihat status dan body respons secara menyeluruh
-            \Log::info('Fonnte API Response:', [
-                'response_body' => $response->body(), // Seluruh body respons
-                'response_status' => $response->status() // Status HTTP dari API
-            ]);
+            $result = json_decode($response->getBody(), true);
     
-            if ($response->successful()) {
-                $responseBody = $response->json();
-                \Log::info('Fonnte API JSON Response:', ['response' => $responseBody]);
-    
-                if (isset($responseBody['status']) && $responseBody['status'] === true) {
-                    return [
-                        'status' => 'success',
-                        'message' => $responseBody['message'] ?? 'Pesan berhasil dikirim.',
-                    ];
-                }
-    
-                // Jika status response API adalah false, log error lebih detail
-                \Log::error('Fonnte API Error Response:', [
-                    'error_message' => $responseBody['message'] ?? 'Gagal mengirim pesan.'
-                ]);
-                return [
-                    'status' => 'error',
-                    'message' => $responseBody['message'] ?? 'Gagal mengirim pesan.',
-                ];
+            // Tangani jika API Fonnte memberikan respons gagal
+            if (!$result['status']) {
+                throw new \Exception('Fonnte API gagal: ' . ($result['message'] ?? 'Unknown error'));
             }
     
-            // Jika respons API gagal (status code 4xx atau 5xx)
-            \Log::error('Fonnte API Error Response:', [
-                'error_response' => $response->body(),
-                'status_code' => $response->status() // Status code API, misalnya 400 atau 500
-            ]);
-            return [
-                'status' => 'error',
-                'message' => 'Kesalahan saat menghubungi API Fonnte.',
-                'response' => $response->body(),
-                'status_code' => $response->status(),
-            ];
-    
+            return $result;
         } catch (\Exception $e) {
-            // Menangkap exception dan log error detailnya
-            \Log::error('Fonnte API Exception:', [
+            // Tangkap error untuk ditampilkan
+            dd([
                 'error_message' => $e->getMessage(),
-                'error_trace' => $e->getTraceAsString()
+                'trace' => $e->getTrace(),
             ]);
-            return [
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan saat mengirim pesan.',
-            ];
         }
     }
-    
-    
-    
-
 }

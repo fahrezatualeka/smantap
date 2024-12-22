@@ -13,9 +13,9 @@ class DataWajibPajak extends Model
         'alamat',
         'npwpd',
         'jenis_pajak_id',
-        'kategori_pajak_id',
-        'nomor_telepon',
-        'pembagian_zonasi',
+        // 'kategori_pajak_id',
+        'telepon',
+        'zona',
         // 'status_lunas',
     ];
 
@@ -23,61 +23,10 @@ class DataWajibPajak extends Model
     {
         return $this->belongsTo(JenisPajak::class, 'jenis_pajak_id');
     }
-
-    public function kategoriPajak()
+    public function dataPiutang()
     {
-        return $this->belongsTo(KategoriPajak::class, 'kategori_pajak_id');
-    }
-
-    public function dataPenetapan()
-    {
-        return $this->hasMany(DataPenetapan::class);
+        return $this->hasMany(DataPiutang::class, 'npwpd', 'npwpd');
     }
     
-
-
-    // public function dataZonasi()
-    // {
-    //     return $this->hasMany(DataZonasi::class, 'npwpd', 'npwpd');
-    // }
-
-    // public function dataPelunasan()
-    // {
-    //     return $this->hasMany(DataPelunasan::class, 'npwpd', 'npwpd');
-    // }
-
-    // public function setNomorTeleponAttribute($value)
-    // {
-    //     $this->attributes['nomor_telepon'] = preg_replace('/\D/', '', $value);
-    // }
-
-    // // Event untuk update/soft delete yang mempengaruhi DataZonasi dan DataPelunasan
-    // public static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::updated(function ($dataWajibPajak) {
-    //         // Update DataZonasi terkait
-    //         $dataWajibPajak->dataZonasi()->update([
-    //             'nama_pajak' => $dataWajibPajak->nama_pajak,
-    //             'alamat' => $dataWajibPajak->alamat,
-    //             'jenis_pajak_id' => $dataWajibPajak->jenis_pajak_id,
-    //             'kategori_pajak_id' => $dataWajibPajak->kategori_pajak_id,
-    //         ]);
-
-    //         // Update DataPelunasan terkait
-    //         $dataWajibPajak->dataPelunasan()->update([
-    //             'nama_pajak' => $dataWajibPajak->nama_pajak,
-    //             'alamat' => $dataWajibPajak->alamat,
-    //             'jenis_pajak_id' => $dataWajibPajak->jenis_pajak_id,
-    //             'kategori_pajak_id' => $dataWajibPajak->kategori_pajak_id,
-    //         ]);
-    //     });
-
-    //     static::deleted(function ($dataWajibPajak) {
-    //         // Hapus data terkait di DataZonasi dan DataPelunasan
-    //         $dataWajibPajak->dataZonasi()->delete();
-    //         $dataWajibPajak->dataPelunasan()->delete();
-    //     });
-    // }
+    
 }

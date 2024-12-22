@@ -50,19 +50,29 @@ class LaporanPelunasan extends Model
         'alamat',
         'npwpd',
         'jenis_pajak_id',
-        'kategori_pajak_id',
-        'nomor_telepon',
-        'pembagian_zonasi',
-        'jumlah_penagihan',
+        // 'kategori_pajak_id',
+        'telepon',
+        'zona',
+        // 'tagihan',
         'periode',
         // 'jumlah_pembayaran',
         'tanggal_pembayaran',
+        'metode_pembayaran',
+        'jumlah_pembayaran',
         'buktipembayaran',
+        'buktisspd',
         'buktivisit',
-        'tempat_pembayaran',
+        'keterangan',
+        'pengirim',
+        'konfirmasi',
     ];
 
-    // Relasi ke DataWajibPajak
+
+    // public function dataPiutang()
+    // {
+    //     return $this->belongsTo(DataPiutang::class, 'npwpd', 'npwpd');
+    // }
+
     public function dataWajibPajak()
     {
         return $this->belongsTo(DataWajibPajak::class, 'npwpd', 'npwpd');
@@ -72,16 +82,10 @@ class LaporanPelunasan extends Model
     {
         return $this->belongsTo(JenisPajak::class, 'jenis_pajak_id');
     }
-    
-    public function kategoriPajak()
-    {
-        return $this->belongsTo(KategoriPajak::class, 'kategori_pajak_id');
-    }
-    
 
-public function dataPenagihan()
-{
-    return $this->belongsTo(DataPenagihan::class, 'npwpd', 'npwpd');
-}
+    public function dataPenagihan()
+    {
+        return $this->belongsTo(DataPenagihan::class, 'npwpd', 'npwpd');
+    }
 
 }

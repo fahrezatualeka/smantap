@@ -15,34 +15,64 @@ class LaporanPelunasanController extends Controller
     public function index()
     {
         // $dataPelunasan = LaporanPelunasan::all();
-        $dataPelunasan = LaporanPelunasan::with(['jenisPajak', 'kategoriPajak'])
+        $laporanPelunasan = LaporanPelunasan::with(['jenisPajak'])
         ->orderBy('created_at', 'desc')
         ->get();
     
-        return view('admin.laporan_pelunasan.data', compact('dataPelunasan'));
+        return view('admin.laporan_pelunasan.data', compact('laporanPelunasan'));
     }
 
     public function filter(Request $request)
     {
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:255',
+            'jenis_pajak_id' => 'nullable|integer|exists:jenispajak,id',
+            'zona' => 'nullable|integer',
+            'bulan' => 'nullable|string|max:15',
+            'metode_pembayaran' => 'nullable|string',
+        ]);
+    
         $query = LaporanPelunasan::query();
-        
-        if ($request->has('jenis_pajak_id') && $request->jenis_pajak_id != '') {
+    
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_pajak', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('alamat', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->filled('jenis_pajak_id')) {
             $query->where('jenis_pajak_id', $request->jenis_pajak_id);
         }
 
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_pajak', 'LIKE', '%' . $search . '%')
-                  ->orWhere('alamat', 'LIKE', '%' . $search . '%');
-            });
+        if ($request->filled('zona')) {
+            $query->where('zona', $request->zona);
         }
-        
-        // $dataPelunasan = $query->get();
-        $dataPelunasan = $query->orderBy('created_at', 'desc')->get();
 
-        
-        return view('admin.laporan_pelunasan.data', compact('dataPelunasan'));
+        if ($request->filled('bulan')) {
+            // Mapping nama bulan
+            $bulanMapping = [
+                'January' => 'Januari', 'February' => 'Februari', 'March' => 'Maret', 
+                'April' => 'April', 'May' => 'Mei', 'June' => 'Juni', 
+                'July' => 'Juli', 'August' => 'Agustus', 'September' => 'September', 
+                'October' => 'Oktober', 'November' => 'November', 'December' => 'Desember',
+            ];
+    
+            $namaBulan = $bulanMapping[$request->bulan] ?? null;
+    
+            if ($namaBulan) {
+                // Filter berdasarkan nama bulan di `periode`
+                $query->where('periode', 'LIKE', $namaBulan . '%');
+            }
+        }
+
+        if ($request->filled('metode_pembayaran')) {
+            $query->where('metode_pembayaran', $request->metode_pembayaran);
+        }
+    
+        $laporanPelunasan = $query->latest()->get();
+    
+        return view('admin.laporan_pelunasan.data', compact('laporanPelunasan'));
     }
 
     public function showPaymentProof($id)

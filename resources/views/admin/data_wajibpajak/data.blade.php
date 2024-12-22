@@ -4,9 +4,9 @@
 <style>
     .table-responsive {
         max-height: 460px;
-        /* max-height: 375px; */
         overflow-y: auto;
-        }
+    }
+
 </style>
 
 <section class="content-header">
@@ -63,9 +63,7 @@
                     </a>
                 </div>
             </form>
-            
         </div>
-
     
     {{-- <div class="box-body">
         <form action="{{ route('admin.data_wajibpajak.filter') }}" method="GET" id="filterForm">
@@ -74,7 +72,7 @@
                     <label for="search">Pencarian:</label>
                     <input type="text" name="search" class="form-control" id="search" placeholder="- Semua -" value="{{ request()->search }}">
                 </div>
-    
+
                 <!-- Filter Pembagian Zonasi -->
                 <div class="col-md-2">
                     <label for="pembagian_zonasi">Pembagian Zonasi:</label>
@@ -115,6 +113,17 @@
                         <option value="3" {{ request()->jenis_pajak_id == '3' ? 'selected' : '' }}>Hiburan</option>
                     </select>
                 </div>
+                <div class="col-md-2">
+                    <label for="zona">Zona:</label>
+                    <select name="zona" class="form-control" id="zona">
+                        <option value="">- Semua -</option>
+                        @foreach(range(1, 4) as $zona)
+                            <option value="{{ $zona }}" {{ request('zona') == $zona ? 'selected' : '' }}>
+                                {{ $zona }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
     
                 <!-- Filter Kategori Pajak -->
                 {{-- <div class="col-md-2">
@@ -128,15 +137,15 @@
                 </div> --}}
     
                 <!-- Button Filter -->
-                <div class="col-md-2">
+                {{-- <div class="col-md-2">
                     <button type="submit" class="btn btn-default" style="margin-top: 25px;">
                         <i class="fa-solid fa-filter"></i> Filter Data
                     </button>
-                </div>
+                </div> --}}
             </div>
         </form>
     </div>
-    
+
 
     <div class="box-body table-responsive">
         {{-- <form action="{{ route('admin.data_wajibpajak.zonasi') }}" method="POST">
@@ -151,33 +160,33 @@
                         <th>Alamat</th>
                         <th>NPWPD</th>
                         <th>Jenis Pajak</th>
-                        <th>Kategori Pajak</th>
-                        <th>Nomor Telepon</th>
-                        <th>Pembagian Zonasi</th>
+                        {{-- <th>Kategori Pajak</th> --}}
+                        <th>Telepon</th>
+                        <th>Zona</th>
                         {{-- <th>Tanggal Tagihan</th> --}}
                         {{-- <th>Jumlah Piutang</th> --}}
                         {{-- <th style="width: 124px">Aksi</th> --}}
-                        {{-- <th style="width: 0px">Aksi</th> --}}
+                        <th style="width: 0px">Aksi</th>
                         {{-- <th style="width: 0px">Pelunasan</th> --}}
                         {{-- <th>wa</th> --}}
                     </tr>
                 </thead>
                 <tbody>
-                    @if($data->isEmpty())
+                    @if($dataWajibPajak->isEmpty())
                     <tr>
                         <td colspan="14" class="text-center">Tidak ada data wajib pajak.</td>
                     </tr>
                     @else
-                    @foreach ($data as $key => $datawajibpajak)
+                    @foreach ($dataWajibPajak as $key => $datawajibpajak)
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $datawajibpajak->nama_pajak }}</td>
                         <td>{{ $datawajibpajak->alamat }}</td>
                         <td>{{ $datawajibpajak->npwpd }}</td>
                         <td>{{ $datawajibpajak->jenisPajak ? $datawajibpajak->jenisPajak->jenispajak : 'Tidak Ditemukan' }}</td>
-                        <td>{{ $datawajibpajak->kategoriPajak ? $datawajibpajak->kategoriPajak->kategoripajak : 'Tidak Ditemukan' }}</td>
-                        <td>{{ $datawajibpajak->nomor_telepon }}</td>
-                        <td>{{ $datawajibpajak->pembagian_zonasi }}</td>
+                        {{-- <td>{{ $datawajibpajak->kategoriPajak ? $datawajibpajak->kategoriPajak->kategoripajak : 'Tidak Ditemukan' }}</td> --}}
+                        <td>{{ $datawajibpajak->telepon }}</td>
+                        <td>{{ $datawajibpajak->zona }}</td>
                         {{-- <td>Rp{{ number_format((float) $datawajibpajak->jumlah_piutang, 0, ',', '.') }}</td> --}}
                         {{-- <td>
                             @if($datawajibpajak->jumlah_piutang > 0)
@@ -236,20 +245,20 @@
                             @endif
                         </td> --}}
                         
-                        {{-- <td>
+                        <td>
                             <a href="{{ url('data_wajibpajak/edit/'.$datawajibpajak->id) }}" class="btn bg-green btn-xs">
                                 <i class="fa fa-pencil"></i> Edit
                             </a>
-                            <form action="{{ url('data_wajibpajak/delete/'.$datawajibpajak->id) }}" method="post" style="display: inline-block;">
+                            {{-- <form action="{{ url('data_wajibpajak/delete/'.$datawajibpajak->id) }}" method="post" style="display: inline-block;">
                                 @csrf
                                 @method('delete')
                                 <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Apakah Anda yakin ingin menghapus data? karena data yang anda hapus akan otomatis terhapus di data penetapan.')">
                                     <i class="fa fa-trash"></i> Hapus
                                 </button>
-                            </form>
+                            </form> --}}
                             
                             
-                        </td> --}}
+                        </td>
                         {{-- <td>
                             @if($datawajibpajak->status_lunas == 'Lunas')
                                 Lunas
@@ -290,7 +299,11 @@
             <i class="fa-solid fa-file-excel"></i> Export Excel
         </a>
         
-        <a href="{{ route('admin.data_wajibpajak.exportPdf') }}" class="btn bg-black">
+        <a href="{{ route('admin.data_wajibpajak.exportPdf', [
+            'search' => request('search'),
+            'jenis_pajak_id' => request('jenis_pajak_id'),
+            'zona' => request('zona'),
+        ]) }}" class="btn bg-black">
             <i class="fa-solid fa-file-pdf"></i> Export PDF
         </a>
     </div>
@@ -414,7 +427,25 @@ function markAsLunas(id) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("filterForm");
 
+    // Trigger form submit on input or select change
+    form.querySelectorAll("input, select").forEach(element => {
+        element.addEventListener("change", function () {
+            form.submit();
+        });
+
+        // Untuk input teks, deteksi ketika pengguna berhenti mengetik
+        if (element.type === "text") {
+            let typingTimer;
+            element.addEventListener("keyup", function () {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => form.submit(), 500); // Submit setelah 500ms berhenti mengetik
+            });
+        }
+    });
+});
 
 </script>
     

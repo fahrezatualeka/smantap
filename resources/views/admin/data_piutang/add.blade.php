@@ -1,115 +1,99 @@
-@extends('layout/template')
+    @extends('layout/template')
 
-@section('content')
-<section class="content-header">
-    <h1>
-        Wajib Pajak
-    </h1>
-</section>
+    @section('content')
+    <section class="content-header">
+        <h1>
+            Penetapan
+        </h1>
+    </section>
 
-<section class="content">
-    <div class="box">
-        <div class="box-header">
-            <h3 class="box-title">Tambah Data Wajib Pajak</h3>
-            <div class="pull-right">
-                <a href="{{ url('data_piutang') }}" class="btn btn-info">
-                    <i class="fa fa-arrow-left"></i> Kembali
-                </a>
+    <section class="content">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Tambah Data Penetapan</h3>
+                <div class="pull-right">
+                    <a href="{{ url('data_penetapan') }}" class="btn btn-info">
+                        <i class="fa fa-arrow-left"></i> Kembali
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="box-body">
-            <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <form id="wpForm" action="{{ route('admin.data_piutang.store') }}" method="post">
-                        @csrf
-                        <div class="form-group">
-                            <label for="nama_pajak">Nama Pajak</label>
-                            <input type="text" name="nama_pajak" id="nama_pajak" class="form-control" value="{{ old('nama_pajak') }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="alamat">Alamat</label>
-                            <input type="text" name="alamat" id="alamat" class="form-control" value="{{ old('alamat') }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="npwpd">NPWPD</label>
-                            <input type="text" name="npwpd" id="npwpd" class="form-control" value="{{ old('npwpd') }}">
-                        </div>
-                        {{-- <div class="form-group">
-                            <label for="nomor_telepon">Nomor Telepon</label>
-                            <input type="number" name="nomor_telepon" id="nomor_telepon" class="form-control" value="{{ old('nomor_telepon') }}">
-                        </div> --}}
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        <form action="{{ route('admin.data_penetapan.store') }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label for="npwpd">NPWPD</label>
+                                <select name="npwpd" id="npwpd" class="form-control" required>
+                                    <option value="">- Pilih -</option>
+                                    @foreach ($dataWajibPajak as $wajibPajak)
+                                        <option value="{{ $wajibPajak->npwpd }}">{{ $wajibPajak->npwpd }} - {{ $wajibPajak->nama_pajak }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="jumlah_penagihan">Jumlah Penagihan</label>
+                                <input type="number" name="jumlah_penagihan" id="jumlah_penagihan" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="bulan">Pilih Bulan</label>
+                                <select name="bulan" id="bulan" class="form-control" required>
+                                    <option value="">- Pilih -</option>
+                                    <option value="Januari">Januari</option>
+                                    <option value="Februari">Februari</option>
+                                    <option value="Maret">Maret</option>
+                                    <option value="April">April</option>
+                                    <option value="Mei">Mei</option>
+                                    <option value="Juni">Juni</option>
+                                    <option value="Juli">Juli</option>
+                                    <option value="Agustus">Agustus</option>
+                                    <option value="September">September</option>
+                                    <option value="Oktober">Oktober</option>
+                                    <option value="November">November</option>
+                                    <option value="Desember">Desember</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tahun">Pilih Tahun</label>
+                                <select name="tahun" id="tahun" class="form-control" required>
+                                    <option value="">- Pilih -</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-normal">
+                                    <i class="fa fa-paper-plane"></i> Simpan
+                                </button>
+                                <button type="reset" class="btn bg-red btn-normal">
+                                    <i class="fa fa-refresh"></i> Ulangi
+                                </button>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="jenispajak">Jenis Pajak</label>
-                            <select name="jenis_pajak_id" id="jenispajak" class="form-control">
-                                <option value="">- Pilih -</option>
-                                @foreach($jenisPajak as $jenis)
-                                    <option value="{{ $jenis->id }}">{{ $jenis->jenispajak }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="kategoripajak">Kategori Pajak</label>
-                            <select name="kategori_pajak_id" id="kategoripajak" class="form-control">
-                                <option value="">- Pilih -</option>
-                                @foreach($kategoriPajak as $kategori)
-                                    <option value="{{ $kategori->id }}">{{ $kategori->kategoripajak }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tanggal_tagihan">Tanggal Tagihan</label>
-                            <input type="date" name="tanggal_tagihan" id="tanggal_tagihan" class="form-control" value="{{ old('tanggal_tagihan') }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="jumlah_piutang">Jumlah Piutang</label>
-                            <input type="number" name="jumlah_piutang" id="jumlah_piutang" class="form-control" value="{{ old('jumlah_piutang') }}">
-                        </div>
-                        
-                        
-
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fa fa-paper-plane"></i> Kirim
-                            </button>
-                            <button type="reset" class="btn btn-danger">
-                                <i class="fa fa-refresh"></i> Ulangi
-                            </button>
-                        </div>
-                    </form>
+                        </form> 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<script>
+    </section>
+    <script>
 
 document.getElementById('jumlah_piutang').addEventListener('input', function (e) {
-var value = e.target.value.replace(/[^\d]/g, ''); // Hapus semua karakter non-digit
-if (value) {
-    // Menambahkan simbol Rp dan titik pemisah ribuan
-    e.target.value = 'Rp' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-} else {
-    e.target.value = ''; // Jika kosong, hilangkan simbol Rp
-}
+    var value = e.target.value.replace(/[^\d]/g, ''); // Hapus semua karakter non-digit
+    if (value) {
+        // Menambahkan simbol Rp dan titik pemisah ribuan
+        e.target.value = 'Rp' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    } else {
+        e.target.value = ''; // Jika kosong, hilangkan simbol Rp
+    }
 });
 
 // Menghapus simbol 'Rp' dan titik saat form disubmit
 document.getElementById('wpForm').addEventListener('submit', function() {
-var jumlahPiutangInput = document.getElementById('jumlah_piutang');
-var value = jumlahPiutangInput.value.replace(/[^\d]/g, ''); // Hapus simbol dan titik
-jumlahPiutangInput.value = value; // Set value hanya angka
+    var jumlahPiutangInput = document.getElementById('jumlah_piutang');
+    var value = jumlahPiutangInput.value.replace(/[^\d]/g, ''); // Hapus simbol dan titik
+    jumlahPiutangInput.value = value; // Set value hanya angka
 });
 
 // document.getElementById('jenispajak').addEventListener('change', function () {
@@ -150,6 +134,6 @@ jumlahPiutangInput.value = value; // Set value hanya angka
 // });
 
 
-</script>
-
-@endsection
+    </script>
+    
+    @endsection

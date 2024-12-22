@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\Facades\Image;
 
 return [
 
@@ -32,6 +33,8 @@ return [
         'driver' => 'file',
     ],
 
+    
+
     'providers' => ServiceProvider::defaultProviders()->merge([
         /*
          * Package Service Providers...
@@ -53,5 +56,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        // 'Image' => Intervention\Image\Facades\Image::class,
     ])->toArray(),
+
+    
 ];

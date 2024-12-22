@@ -4,17 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\DataPenetapan;
 use App\Models\DataWajibPajak;
-use App\Models\DataPenagihan;
 use App\Models\DataPiutang;
 use App\Models\JenisPajak;
 use App\Models\LaporanPelunasan;
-use App\Models\LaporanPiutang;
 use App\Models\KategoriPajak;
 use App\Imports\DataPenetapanImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
-use App\Exports\DataPenetapanExport;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
 
@@ -23,44 +19,27 @@ use Illuminate\Http\Request;
 
 class DataPenetapanController extends Controller
 {
-
-//     public function index()
-// {
-//     // Ambil data dengan sorting
-//     $dataPenetapan = DataPenetapan::orderByRaw("
-//         CASE 
-//             WHEN status = 'Belum Bayar' THEN 0
-//             WHEN status = 'Sudah Bayar' THEN 1
-//         END ASC
-//     ")->latest() // Data terbaru berada di atas
-//       ->get();
-
-//     return view('admin.data_penetapan.data', compact('dataPenetapan'));
-// }
-
-public function index()
-{
-    // Ambil data dengan sorting dan relasi
-    $dataPenetapan = DataPenetapan::with(['jenisPajak', 'kategoriPajak'])
-        ->orderByRaw("
-            CASE 
-                WHEN status = 'Belum Bayar' THEN 0
-                WHEN status = 'Sudah Bayar' THEN 1
-            END ASC
-        ")
-        ->get();
-
-    return view('admin.data_penetapan.data', compact('dataPenetapan'));
-}
-
+    public function index()
+    {
+        $dataPenetapan = DataPenetapan::all(); // Ambil semua data
+        return view('admin.data_penetapan.data', compact('dataPenetapan'));
+    }
+    
+    // public function index()
+    // {
+    //     $jenisPajak = JenisPajak::all();
+    //     $kategoriPajak = KategoriPajak::all(); // Tambahkan ini
+    //     return view('admin.data_penetapan.index', compact('jenisPajak', 'kategoriPajak'));
+    // }
 
     public function filter(Request $request)
     {
         $validated = $request->validate([
-            'jenis_pajak_id' => 'nullable|integer|exists:jenispajak,id',
-            'kategori_pajak_id' => 'nullable|integer|exists:kategoripajak,id',
+            'jenis_pajak_id' => 'nullable|integer|exists:jenispajak,id', // Sesuaikan nama tabel
+            'kategori_pajak_id' => 'nullable|integer|exists:kategoripajak,id', // Sesuaikan nama tabel
             'search' => 'nullable|string|max:255',
         ]);
+        
     
         $query = DataPenetapan::query();
     
@@ -79,16 +58,9 @@ public function index()
             });
         }
     
-        $dataPenetapan = $query->orderByRaw("
-            CASE 
-                WHEN status = 'Belum Bayar' THEN 0
-                WHEN status = 'Sudah Bayar' THEN 1
-            END ASC
-        ")->latest()->get();
-    
+        $dataPenetapan = $query->get();
         return view('admin.data_penetapan.data', compact('dataPenetapan'));
     }
-    
 
     public function create()
     {
@@ -117,56 +89,20 @@ public function index()
         // Cari data wajib pajak berdasarkan npwpd
         $wajibPajak = DataWajibPajak::where('npwpd', $request->npwpd)->first();
     
-        // Ambil jenis dan kategori pajak dari data wajib pajak
-        $jenisPajakId = $wajibPajak->jenis_pajak_id ?? null;
-        $kategoriPajakId = $wajibPajak->kategori_pajak_id ?? null;
+        // Ambil jenis dan kategori pajak dari data wajib pajak (jika sudah ada relasi atau field terkait)
+        $jenisPajakId = $wajibPajak->jenis_pajak_id ?? null; // Sesuaikan nama kolomnya
+        $kategoriPajakId = $wajibPajak->kategori_pajak_id ?? null; // Sesuaikan nama kolomnya
     
         // Simpan data penetapan
-        $dataPenetapan = DataPenetapan::create([
+        DataPenetapan::create([
             'npwpd' => $wajibPajak->npwpd,
             'nama_pajak' => $wajibPajak->nama_pajak,
             'alamat' => $wajibPajak->alamat,
             'jumlah_penagihan' => $request->jumlah_penagihan,
             'jenis_pajak_id' => $jenisPajakId,
             'kategori_pajak_id' => $kategoriPajakId,
-            'nomor_telepon' => $wajibPajak->nomor_telepon,
-            'pembagian_zonasi' => $wajibPajak->pembagian_zonasi,
             'periode' => $request->bulan . ' ' . $request->tahun,
-            'status' => 'Belum Bayar', // Menambahkan status default
         ]);
-    
-        // Jika statusnya 'Belum Bayar', tambahkan data ke LaporanPiutang dan DataPenagihan
-        if ($dataPenetapan->status === 'Belum Bayar') {
-            // Masukkan data ke LaporanPiutang
-            LaporanPiutang::create([
-                'nama_pajak' => $dataPenetapan->nama_pajak,
-                'alamat' => $dataPenetapan->alamat,
-                'npwpd' => $dataPenetapan->npwpd,
-                'jenis_pajak_id' => $dataPenetapan->jenis_pajak_id,
-                'kategori_pajak_id' => $dataPenetapan->kategori_pajak_id,
-                'nomor_telepon' => $dataPenetapan->nomor_telepon,
-                'pembagian_zonasi' => $dataPenetapan->pembagian_zonasi,
-                'jumlah_penagihan' => $dataPenetapan->jumlah_penagihan,
-                'periode' => $dataPenetapan->periode,
-            ]);
-    
-            // Masukkan data ke DataPenagihan
-            $zonasiArray = explode(',', $dataPenetapan->pembagian_zonasi);
-            foreach ($zonasiArray as $zonasi) {
-                DataPenagihan::create([
-                    'nama_pajak' => $dataPenetapan->nama_pajak,
-                    'alamat' => $dataPenetapan->alamat,
-                    'npwpd' => $dataPenetapan->npwpd,
-                    'jenis_pajak_id' => $dataPenetapan->jenis_pajak_id,
-                    'kategori_pajak_id' => $dataPenetapan->kategori_pajak_id,
-                    'nomor_telepon' => $dataPenetapan->nomor_telepon,
-                    'pembagian_zonasi' => trim($zonasi),
-                    'jumlah_penagihan' => $dataPenetapan->jumlah_penagihan,
-                    'periode' => $dataPenetapan->periode,
-                    'status' => 'Belum Bayar',
-                ]);
-            }
-        }
     
         return redirect()->route('admin.data_penetapan.data')->with('success', 'Data berhasil ditambahkan!');
     }
@@ -246,197 +182,121 @@ public function index()
             'bulan' => 'required|string',
             'tahun' => 'required|integer',
         ]);
-    
-        // Pemetaan bulan ke angka
-        $monthMapping = [
-            'january' => '01', 'february' => '02', 'march' => '03',
-            'april' => '04', 'may' => '05', 'june' => '06',
-            'july' => '07', 'august' => '08', 'september' => '09',
-            'october' => '10', 'november' => '11', 'december' => '12'
-        ];
-    
-        $bulan = strtolower($request->bulan);
-        $bulanAngka = $monthMapping[$bulan] ?? null;
-        if (!$bulanAngka) {
-            return redirect()->back()->with('error', 'Bulan tidak valid.');
+        
+        // Cek apakah file ada
+        if ($request->hasFile('file')) {
+            Log::info('File diterima: ', ['file' => $request->file('file')->getClientOriginalName()]);
+        } else {
+            Log::error('File tidak ditemukan');
+            return redirect()->back()->with('error', 'File tidak ditemukan');
         }
     
-        $periode = "{$request->tahun}-{$bulanAngka}";
+        try {
+            $bulan = $request->bulan;
+            $tahun = $request->tahun;
     
-        // Import data
-        Excel::import(new DataPenetapanImport($periode), $request->file('file'));
+            // Pemetaan bulan dalam bahasa Inggris ke bahasa Indonesia
+            $monthMapping = [
+                'january' => '01', 'february' => '02', 'march' => '03',
+                'april' => '04', 'may' => '05', 'june' => '06',
+                'july' => '07', 'august' => '08', 'september' => '09',
+                'october' => '10', 'november' => '11', 'december' => '12'
+            ];
     
-        // Sinkronisasi data
-        $dataPenetapanBelumBayar = DataPenetapan::where('status', 'Belum Bayar')->get();
+            // Convert bulan ke format lowercase dan periksa apakah valid
+            $bulan = strtolower($bulan);  // Pastikan input menjadi huruf kecil
+            if (!isset($monthMapping[$bulan])) {
+                throw new \Exception("Bulan tidak valid: " . ucfirst($bulan));
+            }
     
-        foreach ($dataPenetapanBelumBayar as $data) {
-            // Sinkronisasi LaporanPiutang
-            LaporanPiutang::updateOrCreate(
-                ['npwpd' => $data->npwpd], // Unik berdasarkan npwpd
-                $data->only(['nama_pajak', 'alamat', 'npwpd', 'jenis_pajak_id', 'kategori_pajak_id', 'nomor_telepon', 'pembagian_zonasi', 'jumlah_penagihan', 'periode'])
-            );
+            // Ambil bulan dalam angka
+            $bulanAngka = $monthMapping[$bulan];
+            $periode = "{$tahun}-{$bulanAngka}"; // Formatkan periode menjadi "YYYY-MM"
     
-            // Sinkronisasi DataPenagihan
-            DataPenagihan::updateOrCreate(
-                ['npwpd' => $data->npwpd], // Unik berdasarkan npwpd
-                $data->only(['nama_pajak', 'alamat', 'npwpd', 'jenis_pajak_id', 'kategori_pajak_id', 'nomor_telepon', 'pembagian_zonasi', 'jumlah_penagihan', 'periode'])
-            );
+            // Proses impor data
+            Excel::import(new DataPenetapanImport($periode), $request->file('file'));
+            
+            Log::info('Data berhasil diimpor ke tabel Data Penetapan', ['periode' => $periode]);
+    
+            return redirect()->back()->with('success', 'Data berhasil diimpor ke tabel Data Penetapan!');
+        } catch (\Exception $e) {
+            Log::error('Gagal mengimpor data:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', $e->getMessage());
         }
-    
-        return redirect()->back()->with('success', 'Data berhasil diimpor ke tabel Data Penetapan!');
     }
     
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, $penetapanId)
     {
+        Log::info('Memulai updateStatus', ['penetapanId' => $penetapanId]);
+    
         try {
-            $dataPenetapan = DataPenetapan::findOrFail($id);
-            
+            $penetapan = DataPenetapan::findOrFail($penetapanId);
+            Log::info('Data Penetapan ditemukan', ['penetapan' => $penetapan]);
+    
             $validated = $request->validate([
-                'status' => 'required|string',
-                'tanggal_pembayaran' => 'required|date',
-                'bukti_pembayaran' => 'required|file|mimes:jpeg,jpg,png,pdf|max:2048',
-                'bukti_visit' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:2048',
+                'status' => 'required|in:belum_bayar,sudah_bayar',
+                'jumlah_pembayaran' => 'required_if:status,sudah_bayar|numeric|min:1',
+                'tanggal_pembayaran' => 'required_if:status,sudah_bayar|date',
+                'bukti_pembayaran' => 'required_if:status,sudah_bayar|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'bukti_visit' => 'required_if:status,sudah_bayar|file|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
     
-            // Update status
-            $dataPenetapan->update(['status' => $validated['status']]);
+            Log::info('Validasi berhasil', ['validated' => $validated]);
     
-            if ($validated['status'] === 'Sudah Bayar') {
-                // Hapus data dari LaporanPiutang dan DataPenagihan
-                LaporanPiutang::where('npwpd', $dataPenetapan->npwpd)->delete();
-                DataPenagihan::where('npwpd', $dataPenetapan->npwpd)->delete();
+            Log::info('Bukti Pembayaran', ['exists' => $request->hasFile('bukti_pembayaran')]);
+            Log::info('Bukti Visit', ['exists' => $request->hasFile('bukti_visit')]);
+            
+
+            // Update status penetapan
+            $penetapan->status = $validated['status'];
     
-                // Simpan bukti pembayaran
-                $buktiPembayaranPath = $request->file('bukti_pembayaran')->store('uploads/pembayaran', 'public');
-                $buktiVisitPath = $request->file('bukti_visit') ? $request->file('bukti_visit')->store('uploads/visit', 'public') : null;
+            if ($validated['status'] === 'sudah_bayar') {
+                if ($request->hasFile('bukti_pembayaran') && $request->hasFile('bukti_visit')) {
+                    $buktiPembayaranPath = $request->file('bukti_pembayaran')->store('uploads/pembayaran', 'public');
+                    $buktiVisitPath = $request->file('bukti_visit')->store('uploads/visit', 'public');
+                } else {
+                    return redirect()->back()->with('error', 'Bukti pembayaran atau bukti visit tidak ditemukan.');
+                }
+                
+                
     
-                // Tambahkan ke LaporanPelunasan
+                // Masukkan data ke tabel laporan pelunasan
                 LaporanPelunasan::create([
-                    'nama_pajak' => $dataPenetapan->nama_pajak,
-                    'alamat' => $dataPenetapan->alamat,
-                    'npwpd' => $dataPenetapan->npwpd,
-                    'jenis_pajak_id' => $dataPenetapan->jenis_pajak_id,
-                    'kategori_pajak_id' => $dataPenetapan->kategori_pajak_id,
-                    'nomor_telepon' => $dataPenetapan->nomor_telepon,
-                    'pembagian_zonasi' => $dataPenetapan->pembagian_zonasi,
-                    'jumlah_penagihan' => $dataPenetapan->jumlah_penagihan,
-                    'periode' => $dataPenetapan->periode,
+                    'nama_pajak' => $penetapan->nama_pajak,
+                    'alamat' => $penetapan->alamat,
+                    'npwpd' => $penetapan->npwpd,
+                    'jenis_pajak_id' => $penetapan->jenis_pajak_id,
+                    'kategori_pajak_id' => $penetapan->kategori_pajak_id,
+                    'jumlah_penagihan' => $penetapan->jumlah_penagihan,
+                    'jumlah_pembayaran' => $validated['jumlah_pembayaran'],
                     'tanggal_pembayaran' => $validated['tanggal_pembayaran'],
                     'buktipembayaran' => $buktiPembayaranPath,
                     'buktivisit' => $buktiVisitPath,
-                    'tempat_pembayaran' => 'Admin',
                 ]);
+                Log::info('Laporan pelunasan berhasil dibuat');
             }
     
-            return redirect()->route('admin.data_penetapan.data')
-                ->with('success', 'Status berhasil diperbarui.');
+            $penetapan->save();
+            Log::info('Data Penetapan berhasil diperbarui');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
-        }
-    }
-
-    // public function updateStatus(Request $request, $id)
-    // {
-    //     try {
-    //         // Ambil data dari DataPenetapan berdasarkan ID
-    //         $dataPenetapan = DataPenetapan::findOrFail($id);
-    
-    //         // Validasi data yang diterima dari request
-    //         $validated = $request->validate([
-    //             'status' => 'required|string',
-    //             // 'jumlah_pembayaran' => 'required|numeric|min:0',
-    //             'tanggal_pembayaran' => 'required|date',
-    //             'bukti_pembayaran' => 'required|file|mimes:jpeg,jpg,png,pdf|max:2048',
-    //             'bukti_visit' => 'nullable|file|mimes:jpeg,jpg,png,pdf|max:2048',
-    //         ]);
-    
-    //         // Update status di DataPenetapan
-    //         $dataPenetapan->update(['status' => $validated['status']]);
-
-    
-    //         if ($validated['status'] === 'Sudah Bayar') {
-    //             // Upload file bukti pembayaran
-    //             $buktiPembayaranPath = $request->file('bukti_pembayaran')->store('uploads/pembayaran', 'public');
-            
-    //             $buktiVisitPath = $request->hasFile('bukti_visit') 
-    //                 ? $request->file('bukti_visit')->store('uploads/visit', 'public') 
-    //                 : null;
-            
-    //             LaporanPelunasan::create([
-    //                 'nama_pajak' => $dataPenetapan->nama_pajak,
-    //                 'alamat' => $dataPenetapan->alamat,
-    //                 'npwpd' => $dataPenetapan->npwpd,
-    //                 'jenis_pajak_id' => $dataPenetapan->jenis_pajak_id,
-    //                 'kategori_pajak_id' => $dataPenetapan->kategori_pajak_id,
-    //                 'nomor_telepon' => $dataPenetapan->nomor_telepon,
-    //                 'pembagian_zonasi' => $dataPenetapan->pembagian_zonasi,
-    //                 'jumlah_penagihan' => $dataPenetapan->jumlah_penagihan,
-    //                 'periode' => $dataPenetapan->periode,
-    //                 // 'jumlah_pembayaran' => $validated['jumlah_pembayaran'],
-    //                 'tanggal_pembayaran' => $validated['tanggal_pembayaran'],
-    //                 'buktipembayaran' => $buktiPembayaranPath,
-    //                 'buktivisit' => $buktiVisitPath,
-    //                 'tempat_pembayaran' => 'Admin',
-    //             ]);
-            
-    //             Log::info('Data berhasil disalin ke LaporanPelunasan.', ['npwpd' => $dataPenetapan->npwpd]);
-    //         }
-    
-    //         return redirect()->route('admin.data_penetapan.data')
-    //             ->with('success', 'Data berhasil diperbarui dan diproses.');
-    //     } catch (\Exception $e) {
-    //         Log::error('Terjadi kesalahan saat memproses data.', ['error' => $e->getMessage()]);
-    //         return redirect()->back()->with('error', 'Gagal memproses data: ' . $e->getMessage());
-    //     }
-    // }
-    
-    
-    
-    
-    public function destroy($id)
-    {
-        // Cari data penetapan berdasarkan ID
-        $dataPenetapan = DataPenetapan::findOrFail($id);
-    
-        // Periksa status penetapan
-        if ($dataPenetapan->status === 'Belum Bayar') {
-            // Jika status "belum bayar", hapus data yang terkait di tabel DataPiutang dan LaporanPiutang
-            DataPiutang::where('npwpd', $dataPenetapan->npwpd)->delete();
-            LaporanPiutang::where('npwpd', $dataPenetapan->npwpd)->delete();
-        } elseif ($dataPenetapan->status === 'Sudah Bayar') {
-            // Jika status "sudah bayar", hapus data yang terkait di tabel LaporanPelunasan
-            LaporanPelunasan::where('npwpd', $dataPenetapan->npwpd)->delete();
+            Log::error('Error pada updateStatus: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     
-        // Hapus data penetapan
-        $dataPenetapan->delete();
-    
-        // Redirect dengan pesan sukses
-        return redirect()->route('admin.data_penetapan.data')->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('admin.data_penetapan.data')
+            ->with('success', 'Status berhasil diperbarui.');
     }
-
-    public function exportExcel()
-{
-    return Excel::download(new DataPenetapanExport, 'data_penetapan.xlsx');
-}
-
-public function exportPdf()
-{
-    // Ambil data yang akan ditampilkan di PDF
-    $dataPenetapan = DataPenetapan::with(['jenisPajak', 'kategoriPajak'])
-        ->orderByRaw("
-            CASE 
-                WHEN status = 'Belum Bayar' THEN 0
-                WHEN status = 'Sudah Bayar' THEN 1
-            END ASC
-        ")->latest()->get();
-
-    // Kirim data ke view khusus untuk PDF
-    $pdf = Pdf::loadView('admin.data_penetapan.pdf', compact('dataPenetapan'));
-
-    // Unduh file PDF
-    return $pdf->download('data_penetapan.pdf');
-}
     
+public function destroy($id)
+{
+// Cari data yang akan dihapus
+$dataPenetapan = DataPenetapan::findOrFail($id);
+
+// Hapus data
+$dataPenetapan->delete();
+
+// Redirect dengan pesan sukses
+return redirect()->route('admin.data_penetapan.data')->with('success', 'Data berhasil dihapus!');
+}
 
 }

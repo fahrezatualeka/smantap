@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>SMANTAPP | Pemerintah Kota Ambon</title>
+  <title>SMANTAP | BAPENDA Kota Ambon</title>
   {{-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> --}}
+  <link rel="icon" type="image/x-icon" href="{{ asset('storage/uploads/logo.png') }}"/>
+
   <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
   <link rel="stylesheet" href="{{ asset('bower_components/Ionicons/css/ionicons.min.css') }}">
@@ -39,9 +41,9 @@
   {{-- hold-transition bg-brown --}}
 <div class="login-box" style="width:40%">
   <div class="login-logo">
-    <img src="{{ asset('uploads/logo.png') }}" class="img-fluid" alt="logo" width="100px" height="100px">
+    <img src="{{ asset('storage/uploads/logo.png') }}" class="img-fluid" alt="logo" width="100px" height="100px">
     <p style="font-size:30px">
-      <b> SMANTAPP </b> <br> SISTEM APLIKASI PENAGIHAN PIUTANG PAJAK PEMERINTAH KOTA AMBON
+      <b> SMANTAP </b> <br> SISTEM APLIKASI PENAGIHAN PIUTANG PAJAK BAPENDA KOTA AMBON
   </p>
   </div>
   <div class="col-md-1"></div>
@@ -58,9 +60,12 @@
       </div>
       <br>
       <div class="input-group">
-          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-          <input type="password" name="password" class="form-control" placeholder="Password" required>
-      </div>
+        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        <span class="input-group-addon" onclick="togglePasswordVisibility()" style="cursor: pointer;">
+            <i id="togglePasswordIcon" class="fa fa-eye-slash"></i>
+        </span>
+    </div>
       <br>
     
       {{-- Menampilkan pesan error jika username salah --}}
@@ -107,14 +112,22 @@
 <script src="{{ asset('bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 
-<!-- <script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' /* optional */
-    });
-  });
-</script> -->
+<script>
+    // PASSWORD
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            togglePasswordIcon.classList.remove('fa-eye-slash');
+            togglePasswordIcon.classList.add('fa-eye');
+        } else {
+            passwordField.type = 'password';
+            togglePasswordIcon.classList.remove('fa-eye');
+            togglePasswordIcon.classList.add('fa-eye-slash');
+        }
+    }
+</script>
 </body>
 </html>

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DataWajibPajak;
 use App\Models\JenisPajak;
-use App\Models\KategoriPajak;
+// use App\Models\KategoriPajak;
 use App\Models\DataPelunasan;
-use App\Models\DataPenetapan;
+use App\Models\DataPiutang;
 use App\Models\DataZonasi;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DataWajibPajakImport;
@@ -22,11 +22,11 @@ class DataWajibPajakController extends Controller
     public function index()
     {
         // Ambil data dengan relasi dan urutkan berdasarkan data terbaru
-        $data = DataWajibPajak::with(['jenisPajak', 'kategoriPajak'])
+        $dataWajibPajak = DataWajibPajak::with(['jenisPajak'])
         // ->orderBy('created_at', 'desc')
         ->get();
     
-        return view('admin.data_wajibpajak.data', compact('data'));
+        return view('admin.data_wajibpajak.data', compact('dataWajibPajak'));
     }
 
 
@@ -71,8 +71,8 @@ class DataWajibPajakController extends Controller
     public function create()
     {
         $jenisPajak = JenisPajak::all();
-        $kategoriPajak = KategoriPajak::all(); // Tambahkan ini
-        return view('admin.data_wajibpajak.add', compact('jenisPajak', 'kategoriPajak'));
+        // $kategoriPajak = KategoriPajak::all(); // Tambahkan ini
+        return view('admin.data_wajibpajak.add', compact('jenisPajak'));
     }
     
     public function store(Request $request)
@@ -83,9 +83,9 @@ class DataWajibPajakController extends Controller
             'alamat' => 'required',
             'npwpd' => 'nullable',
             'jenis_pajak_id' => 'required|exists:jenispajak,id',
-            'kategori_pajak_id' => 'required|exists:kategoripajak,id',
-            'nomor_telepon' => 'required|string|max:20|regex:/^[0-9+\-\s]*$/',
-            'pembagian_zonasi' => 'required',
+            // 'kategori_pajak_id' => 'required|exists:kategoripajak,id',
+            'telepon' => 'required|string|max:20|regex:/^[0-9+\-\s]*$/',
+            'zona' => 'required',
             // 'jumlah_piutang' => 'nullable|numeric',  // pastikan itu angka
         ]);
 
@@ -99,10 +99,10 @@ class DataWajibPajakController extends Controller
             'alamat' => $request->alamat,
             'npwpd' => $request->npwpd,
             'jenis_pajak_id' => $request->jenis_pajak_id,
-            'kategori_pajak_id' => $request->kategori_pajak_id,
-            'nomor_telepon' => $request->nomor_telepon,
+            // 'kategori_pajak_id' => $request->kategori_pajak_id,
+            'telepon' => $request->telepon,
             
-            'pembagian_zonasi' => $request->pembagian_zonasi,
+            'zona' => $request->zona,
             // 'jumlah_piutang' => $jumlahPiutang,  // simpan sebagai angka
         ]);
         
@@ -119,8 +119,8 @@ class DataWajibPajakController extends Controller
         $dataWajibPajak = DataWajibPajak::findOrFail($id);
         $jenisPajak = JenisPajak::all();
         // $kategoriPajak = KategoriPajak::where('jenis_pajak_id', $dataWajibPajak->jenis_pajak_id)->get();
-        $kategoriPajak = KategoriPajak::all();    
-        return view('admin.data_wajibpajak.edit', compact('dataWajibPajak', 'jenisPajak', 'kategoriPajak'));
+        // $kategoriPajak = KategoriPajak::all();    
+        return view('admin.data_wajibpajak.edit', compact('dataWajibPajak', 'jenisPajak'));
     }
     
     public function update(Request $request, $id)
@@ -128,13 +128,13 @@ class DataWajibPajakController extends Controller
         // dd($request->all());
         // Validasi input
         $request->validate([
-            'nama_pajak' => 'required',
-            'alamat' => 'required',
-            'npwpd' => 'nullable',
-            'jenis_pajak_id' => 'required|exists:jenispajak,id',
-            'kategori_pajak_id' => 'required|exists:kategoripajak,id',
-            'nomor_telepon' => 'required',
-            'pembagian_zonasi' => 'required|integer|in:1, 2, 3, 4',
+            // 'nama_pajak' => 'required',
+            // 'alamat' => 'required',
+            // 'npwpd' => 'nullable',
+            // 'jenis_pajak_id' => 'required|exists:jenispajak,id',
+            // 'kategori_pajak_id' => 'required|exists:kategoripajak,id',
+            'telepon' => 'required',
+            'zona' => 'required|integer|in:1, 2, 3, 4',
         ]);
         
         // Cari data berdasarkan ID
@@ -142,26 +142,26 @@ class DataWajibPajakController extends Controller
         
         // Simpan perubahan pada DataWajibPajak
         $dataWajibPajak->update([
-            'nama_pajak' => $request->nama_pajak,
-            'alamat' => $request->alamat,
-            'npwpd' => $request->npwpd,
-            'jenis_pajak_id' => $request->jenis_pajak_id,
-            'kategori_pajak_id' => $request->kategori_pajak_id,
-            'nomor_telepon' => $request->nomor_telepon,
-            'pembagian_zonasi' => $request->pembagian_zonasi,
+            // 'nama_pajak' => $request->nama_pajak,
+            // 'alamat' => $request->alamat,
+            // 'npwpd' => $request->npwpd,
+            // 'jenis_pajak_id' => $request->jenis_pajak_id,
+            // 'kategori_pajak_id' => $request->kategori_pajak_id,
+            'telepon' => $request->telepon,
+            'zona' => $request->zona,
         ]);
     
-        // Update data di tabel DataPenetapan jika ada perubahan pada DataWajibPajak
-        // Pastikan npwpd atau kolom terkait diperbarui di DataPenetapan
-        $dataPenetapan = DataPenetapan::where('npwpd', $dataWajibPajak->npwpd)->first();
-        if ($dataPenetapan) {
-            $dataPenetapan->update([
-                'nama_pajak' => $dataWajibPajak->nama_pajak,
-                'alamat' => $dataWajibPajak->alamat,
-                'jenis_pajak_id' => $dataWajibPajak->jenis_pajak_id,
-                'kategori_pajak_id' => $dataWajibPajak->kategori_pajak_id,
-                'nomor_telepon' => $dataWajibPajak->nomor_telepon,
-                'pembagian_zonasi' => $dataWajibPajak->pembagian_zonasi,
+        // Update data di tabel DataPiutang jika ada perubahan pada DataWajibPajak
+        // Pastikan npwpd atau kolom terkait diperbarui di DataPiutang
+        $dataPiutang = DataPiutang::where('npwpd', $dataWajibPajak->npwpd)->first();
+        if ($dataPiutang) {
+            $dataPiutang->update([
+                // 'nama_pajak' => $dataWajibPajak->nama_pajak,
+                // 'alamat' => $dataWajibPajak->alamat,
+                // 'jenis_pajak_id' => $dataWajibPajak->jenis_pajak_id,
+                // 'kategori_pajak_id' => $dataWajibPajak->kategori_pajak_id,
+                'telepon' => $dataWajibPajak->telepon,
+                'zona' => $dataWajibPajak->zona,
             ]);
         }
     
@@ -226,24 +226,59 @@ class DataWajibPajakController extends Controller
     //     ]);
     // } 
     
+    // public function filter(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'jenis_pajak_id' => 'nullable|integer|exists:jenispajak,id', // Sesuaikan nama tabel
+    //         // 'kategori_pajak_id' => 'nullable|integer|exists:kategoripajak,id', // Sesuaikan nama tabel
+    //         'search' => 'nullable|string|max:255',
+    //     ]);
+    
+    //     $query = DataWajibPajak::query();
+    
+    //     if ($request->filled('jenis_pajak_id')) {
+    //         $query->where('jenis_pajak_id', $request->jenis_pajak_id);
+    //     }
+    
+    //     // if ($request->filled('kategori_pajak_id')) {
+    //     //     $query->where('kategori_pajak_id', $request->kategori_pajak_id);
+    //     // }
+    
+    //     if ($request->filled('search')) {
+    //         $query->where(function ($q) use ($request) {
+    //             $q->where('nama_pajak', 'LIKE', '%' . $request->search . '%')
+    //               ->orWhere('alamat', 'LIKE', '%' . $request->search . '%');
+    //         });
+    //     }
+    
+    //     // Tambahkan pengurutan berdasarkan data terbaru
+    //     // $dataWajibPajak = $query->orderBy('created_at', 'desc')->get();
+    //     $dataWajibPajak = $query->get();
+    
+    //     return view('admin.data_wajibpajak.data', compact('dataWajibPajak'));
+    // }
+
     public function filter(Request $request)
     {
         $validated = $request->validate([
-            'jenis_pajak_id' => 'nullable|integer|exists:jenispajak,id', // Sesuaikan nama tabel
-            'kategori_pajak_id' => 'nullable|integer|exists:kategoripajak,id', // Sesuaikan nama tabel
             'search' => 'nullable|string|max:255',
+            'jenis_pajak_id' => 'nullable|integer|exists:jenispajak,id',
+            'zona' => 'nullable|integer', // Tidak validasi relasi karena bukan foreign key
         ]);
     
         $query = DataWajibPajak::query();
     
+        // Filter berdasarkan jenis pajak
         if ($request->filled('jenis_pajak_id')) {
             $query->where('jenis_pajak_id', $request->jenis_pajak_id);
         }
     
-        if ($request->filled('kategori_pajak_id')) {
-            $query->where('kategori_pajak_id', $request->kategori_pajak_id);
+        // Filter berdasarkan zona
+        if ($request->filled('zona')) {
+            $query->where('zona', $request->zona);
         }
     
+        // Filter pencarian
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('nama_pajak', 'LIKE', '%' . $request->search . '%')
@@ -251,19 +286,17 @@ class DataWajibPajakController extends Controller
             });
         }
     
-        // Tambahkan pengurutan berdasarkan data terbaru
-        // $data = $query->orderBy('created_at', 'desc')->get();
-        $data = $query->get();
+        $dataWajibPajak = $query->latest()->get();
     
-        return view('admin.data_wajibpajak.data', compact('data'));
+        return view('admin.data_wajibpajak.data', compact('dataWajibPajak'));
     }
     
     
 
     // public function getDataByNpwpd($npwpd)
     // {
-    //     $data = DataWajibPajak::where('npwpd', $npwpd)->first();
-    //     return response()->json($data);
+    //     $dataWajibPajak = DataWajibPajak::where('npwpd', $npwpd)->first();
+    //     return response()->json($dataWajibPajak);
     // }
     
     // public function markAsLunas(Request $request)
@@ -321,8 +354,8 @@ class DataWajibPajakController extends Controller
         // Cari data yang akan dihapus
         $dataWajibPajak = DataWajibPajak::findOrFail($id);
     
-        // Hapus data terkait di tabel DataPenetapan berdasarkan npwpd
-        DataPenetapan::where('npwpd', $dataWajibPajak->npwpd)->delete();
+        // Hapus data terkait di tabel DataPiutang berdasarkan npwpd
+        DataPiutang::where('npwpd', $dataWajibPajak->npwpd)->delete();
     
         // Hapus data wajib pajak itu sendiri
         $dataWajibPajak->delete();
@@ -367,21 +400,35 @@ class DataWajibPajakController extends Controller
         return Excel::download(new DataWajibPajakExport, 'data_wajibpajak.xlsx');
     }
     
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
-        // Mengambil data Wajib Pajak dengan relasi
-        $dataWajibPajak = DataWajibPajak::with(['jenisPajak', 'kategoriPajak'])
-            ->orderBy('created_at', 'desc') // Urutkan berdasarkan created_at secara menurun
-            ->get();
-    
-        // Pastikan data yang dikirim valid
-        if ($dataWajibPajak->isEmpty()) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan!');
+        // Filter berdasarkan parameter yang dikirimkan dalam request
+        $query = DataWajibPajak::query();
+        
+        // Filter berdasarkan jenis pajak
+        if ($request->filled('jenis_pajak_id')) {
+            $query->where('jenis_pajak_id', $request->jenis_pajak_id);
         }
     
-        // Kirim data ke view khusus untuk PDF
-        $pdf = Pdf::loadView('admin.data_wajibpajak.pdf', ['dataWajibPajak' => $dataWajibPajak]);
+        // Filter berdasarkan zona
+        if ($request->filled('zona')) {
+            $query->where('zona', $request->zona);
+        }
     
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_pajak', 'LIKE', '%' . $request->search . '%')
+                  ->orWhere('alamat', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+        
+        // Ambil data yang difilter
+        $dataWajibPajak = $query->latest()->get();
+        
+        // Kirim data ke view khusus untuk PDF
+        $pdf = Pdf::loadView('admin.data_wajibpajak.pdf', compact('dataWajibPajak'));
+        
         // Unduh file PDF
         return $pdf->download('data_wajib_pajak.pdf');
     }

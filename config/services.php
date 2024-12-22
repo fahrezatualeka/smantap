@@ -38,10 +38,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'fonnte' => [
-        'token' => env('FONNTE_API_KEY'),
-        'url' => env('FONNTE_API_URL', 'https://api.fonnte.com/send'),
-    ],
+'fonnte' => [
+    'token' => env('FONNTE_API_KEY'),
+    'url' => env('FONNTE_API_URL', 'https://api.fonnte.com/send'),
+],
 
 
 

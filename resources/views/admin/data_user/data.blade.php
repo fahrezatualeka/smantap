@@ -51,20 +51,21 @@
     
         
                     <div class="col-md-2">
-                        <label for="pembagian_zonasi">Pembagian Zonasi:</label>
-                        <select name="pembagian_zonasi" class="form-control" id="pembagian_zonasi">
+                        <label for="zona">Zona:</label>
+                        <select name="zona" class="form-control" id="zona">
                             <option value="">- Semua -</option>
-                            <option value="1" {{ request()->pembagian_zonasi == '1' ? 'selected' : '' }}>1</option>
-                            <option value="2" {{ request()->pembagian_zonasi == '2' ? 'selected' : '' }}>2</option>
-                            <option value="3" {{ request()->pembagian_zonasi == '3' ? 'selected' : '' }}>3</option>
-                            <option value="4" {{ request()->pembagian_zonasi == '4' ? 'selected' : '' }}>4</option>
+                            @foreach(range(1, 4) as $zona)
+                                <option value="{{ $zona }}" {{ request('zona') == $zona ? 'selected' : '' }}>
+                                    {{ $zona }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
         
                     <!-- Button Filter -->
-                    <div class="col-md-2">
+                    {{-- <div class="col-md-2">
                         <button type="submit" class="btn btn-default" style="margin-top: 25px;"><i class="fa-solid fa-filter"></i> Filter Data</button>
-                    </div>
+                    </div> --}}
                 </div>
             </form>
         </div>
@@ -76,10 +77,10 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Username</th>
-                        <th>Nomor Telepon</th>
+                        <th>Telepon</th>
                         <th>Alamat</th>
                         <th>Role</th>
-                        <th>Pembagian Zonasi</th>
+                        <th>Zona</th>
                         {{-- <th style="width: 0px">Aksi</th> --}}
                     </tr>
                 </thead>
@@ -95,10 +96,10 @@
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $users->nama }}</td>
                         <td>{{ $users->username }}</td>
-                        <td>{{ $users->nomor_telepon }}</td>
+                        <td>{{ $users->telepon }}</td>
                         <td>{{ $users->alamat }}</td>
                         <td>{{ $users->role }}</td>
-                        <td>{{ $users->pembagian_zonasi }}</td>
+                        <td>{{ $users->zona }}</td>
                         {{-- <td>
                             <a href="{{ url('admin.data_user/edit/'.$users->id) }}" class="btn btn-success btn-xs">
                                 <i class="fa fa-pencil"></i> Edit
@@ -127,5 +128,25 @@
     window.onload = function() {
         document.getElementById('jenis').value = '{{ session('jenis') ?? 'semua' }}';
     };
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("filterForm");
+
+    // Trigger form submit on input or select change
+    form.querySelectorAll("input, select").forEach(element => {
+        element.addEventListener("change", function () {
+            form.submit();
+        });
+
+        // Untuk input teks, deteksi ketika pengguna berhenti mengetik
+        if (element.type === "text") {
+            let typingTimer;
+            element.addEventListener("keyup", function () {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => form.submit(), 500); // Submit setelah 500ms berhenti mengetik
+            });
+        }
+    });
+});
 </script>
 @endsection

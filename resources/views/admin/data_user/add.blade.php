@@ -38,8 +38,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="nomor_telepon">Nomor Telepon</label>
-                            <input type="number" name="nomor_telepon" id="nomor_telepon" class="form-control" value="{{ old('nomor_telepon') }}">
+                            <label for="telepon">Telepon</label>
+                            <input type="number" name="telepon" id="telepon" class="form-control" value="{{ old('telepon') }}">
                         </div>
 
                         <div class="form-group">
@@ -58,8 +58,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="pembagian_zonasi">Pembagian Zonasi</label>
-                            <select name="pembagian_zonasi" id="pembagian_zonasi" class="form-control">
+                            <label for="zona">Zona</label>
+                            <select name="zona" id="zona" class="form-control">
                                 <option value="">- Pilih -</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>

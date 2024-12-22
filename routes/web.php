@@ -9,27 +9,50 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 use App\Http\Controllers\Auth\LoginController;
 
+use App\Http\Controllers\ContactController;
+Route::resource('contacts', ContactController::class);
+Route::get('contacts/{id}/send-message', [ContactController::class, 'sendMessage'])->name('contacts.sendMessage');
+
+use App\Http\Controllers\MessageController;
+Route::resource('messages', MessageController::class);
 // PETUGAS PENAGIHAN
 use App\Http\Controllers\IndexPetugasPenagihanController;
+use App\Http\Controllers\DashboardPetugasPenagihanController;
 use App\Http\Controllers\DataPenagihanController;
+use App\Http\Controllers\DataTransferController;
+use App\Http\Controllers\DataTunaiController;
+use App\Http\Controllers\DataKonfirmasiController;
+use App\Http\Controllers\DataPenutupanController;
+// use App\Http\Controllers\DataPelunasanController;
 use App\Http\Controllers\BuktiController;
+use Illuminate\Support\Facades\File;
+
+
+
 
 // ADMIN
 use App\Http\Controllers\IndexAdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataWajibPajakController;
 use App\Http\Controllers\DataZonasiController;
-use App\Http\Controllers\DataPenetapanController;
+// use App\Http\Controllers\DataPenetapanController;
 use App\Http\Controllers\DataPiutangController;
 use App\Http\Controllers\LaporanPenagihanController;
 use App\Http\Controllers\LaporanPiutangController;
 use App\Http\Controllers\LaporanPelunasanController;
 use App\Http\Controllers\DataUserController;
 use App\Http\Controllers\JenisPajakController;
-use App\Http\Controllers\KategoriPajakController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KelolaPesanWhatsappController;
+// use App\Http\Controllers\KategoriPajakController;
+use App\Http\Controllers\ProfilAdminController;
+use App\Http\Controllers\ProfilPetugasPenagihanController;
+use App\Http\Controllers\ProfilPimpinanController;
 use App\Http\Controllers\FonnteController;
-use App\Models\LaporanPelunasan;
+// use App\Models\LaporanPelunasan;
+use App\Http\Controllers\LaporanTransferController;
+use App\Http\Controllers\LaporanTunaiController;
+use App\Http\Controllers\LaporanKonfirmasiController;
+use App\Http\Controllers\LaporanPenutupanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,37 +78,104 @@ use App\Models\LaporanPelunasan;
 //     Route::get('/data_user', [DataUserController::class, 'index'])->name('data_user');
 // });
 
+
+Route::get('file-access/{path}', function ($path) {
+    $filePath = storage_path('app/' . $path);
+
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+
+    return response()->file($filePath);
+})->name('access.file')->middleware('signed');
+
 // LOGIN
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('/proses', [LoginController::class, 'login'])->name('proses.login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
 // PIMPINAN
 Route::group(['middleware' => ['role:pimpinan']], function () {
     Route::get('/pimpinan', [IndexAdminController::class, 'index'])->name('pimpinan.index');
     Route::get('/dashboard_pimpinan', [DashboardController::class, 'index'])->name('dashboard');
+
+
     // profil pimpinan
-    Route::get('/profil/pimpinan', [ProfileController::class, 'index'])->name('profile');
-    Route::post('/profile/pimpinan/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('/profil/pimpinan', [ProfilPimpinanController::class, 'index'])->name('pimpinan.profil');
+    Route::put('/profil/pimpinan/update', [ProfilPimpinanController::class, 'update'])->name('pimpinan.profil.update');
+
 });
 
 // PETUGAS PENAGIHAN
 Route::group(['middleware' => ['role:petugas_penagihan']], function () {
     Route::get('/petugas_penagihan', [IndexAdminController::class, 'index'])->name('petugas_penagihan.index');
-    Route::get('/data_penagihan', [DataPenagihanController::class, 'index'])->name('data_penagihan.data');
-    Route::post('/data_penagihan/uploadBuktiPembayaran/{id}', [DataPenagihanController::class, 'uploadBuktiPembayaran'])->name('data_penagihan.uploadBuktiPembayaran');
-    Route::post('/data_penagihan/markAsPaid/{id}', [DataPenagihanController::class, 'markAsPaid'])->name('datapenagihan.markAsPaid');
-    Route::delete('/datapenagihan/{id}', [DataPenagihanController::class, 'deleteDatapenagihan'])->name('datapenagihan.delete');
+    Route::get('/dashboard_petugaspenagihan', [DashboardPetugasPenagihanController::class, 'index'])->name('petugas_penagihan.dashboard');
+    Route::get('/data_penagihan/filter', [DataPenagihanController::class, 'filter'])->name('petugas_penagihan.data_penagihan.filter');
+
+
+
+    // WA PETUGAS
+    Route::put('/data-penagihan/transfer/konfirmasi/{id}', [DataPenagihanController::class, 'updateKonfirmasi']);
+
+
+
+    Route::get('/data_penagihan', [DataPenagihanController::class, 'index'])->name('petugas_penagihan.data_penagihan.data');
+    Route::post('/data_penagihan/uploadBuktiPembayaran/{id}', [DataPenagihanController::class, 'uploadBuktiPembayaran'])->name('petugas_penagihan.data_penagihan.uploadBuktiPembayaran');
+    // Route::post('/data_penagihan/markAsPaid/{id}', [DataPenagihanController::class, 'markAsPaid'])->name('petugas_penagihan.data_penagihan..markAsPaid');
+    Route::delete('/datapenagihan/{id}', [DataPenagihanController::class, 'deleteDatapenagihan'])->name('petugas_penagihan.data_penagihan.delete');
+
+    Route::get('/data_transfer', [DataTransferController::class, 'index'])->name('petugas_penagihan.data_transfer.data');
+    Route::get('/data_tunai', [DataTunaiController::class, 'index'])->name('petugas_penagihan.data_tunai.data');
+
+    Route::get('/data_konfirmasi', [DataKonfirmasiController::class, 'index'])->name('petugas_penagihan.data_konfirmasi.data');
+    Route::get('/data_konfirmasi/{id}/bukti_visit', [DataKonfirmasiController::class, 'showVisitProof'])->name('petugas_penagihan.data_konfirmasi.showVisitProof');
+    // Route::get('data-konfirmasi/visit-proof/{id}', [DataKonfirmasiController::class, 'showVisitProof'])
+    // ->name('petugas_penagihan.data_konfirmasi.showVisitProof');
+    Route::get('data_konfirmasi/exportPdf', [DataKonfirmasiController::class, 'exportPdf'])->name('petugas_penagihan.data_konfirmasi.exportPdf');
+    Route::get('/data_konfirmasi/filter', [DataKonfirmasiController::class, 'filter'])->name('petugas_penagihan.data_konfirmasi.filter');
+
+
+    Route::get('/data_penutupan', [DataPenutupanController::class, 'index'])->name('petugas_penagihan.data_penutupan.data');
+    Route::get('/data_penutupan/{id}/bukti_visit', [DataPenutupanController::class, 'showPenutupanProof'])->name('petugas_penagihan.data_penutupan.showPenutupanProof');
+    // Route::get('data-konfirmasi/visit-proof/{id}', [DataKonfirmasiController::class, 'showVisitProof'])
+    // ->name('petugas_penagihan.data_konfirmasi.showVisitProof');
+    Route::get('data_penutupan/exportPdf', [DataPenutupanController::class, 'exportPdf'])->name('petugas_penagihan.data_penutupan.exportPdf');
+    Route::get('/data_penutupan/filter', [DataPenutupanController::class, 'filter'])->name('petugas_penagihan.data_penutupan.filter');
+    // Route::get('/data_pelunasan', [DataPelunasanController::class, 'index'])->name('petugas_penagihan.data_pelunasan.data');
     // Route::put('/data_penagihan/{id}/update-status', [DataPenagihanController::class, 'updateStatus'])->name('data_penagihan.updateStatus');
 
-// profil petugas penagihan
-Route::get('/profil/petugas_penagihan', [ProfileController::class, 'index'])->name('profile');
-Route::post('/profile/petugas_penagihan/update', [ProfileController::class, 'update'])->name('profile.update');
-Route::post('/data_penagihan/upload/{id}', [DataPenagihanController::class, 'uploadBuktiPembayaran'])->name('data_penagihan.upload');
+    Route::get('/profil/petugas_penagihan', [ProfilPetugasPenagihanController::class, 'index'])->name('petugas_penagihan.profil');
+    Route::put('/profil/petugas_penagihan/update', [ProfilPetugasPenagihanController::class, 'update'])->name('petugas_penagihan.profil.update');
+
+    Route::get('/data_transfer/{id}/bukti_pembayaran', [DataTransferController::class, 'showPaymentProof'])->name('petugas_penagihan.data_transfer.showPaymentProof');
+    Route::get('/data_transfer/{id}/bukti_sspd', [DataTransferController::class, 'showSspdProof'])->name('petugas_penagihan.data_transfer.showSspdProof');
+    Route::post('/data-transfer/{id}/upload-sspd', [DataTransferController::class, 'uploadSspdInline'])->name('petugas_penagihan.data_transfer.uploadSspdInline');
+    Route::get('data_transfer/exportPdf', [DataTransferController::class, 'exportPdf'])->name('petugas_penagihan.data_transfer.exportPdf');
+    Route::get('/data_transfer/filter', [DataTransferController::class, 'filter'])->name('petugas_penagihan.data_transfer.filter');
+
+
+
+    Route::post('/data-tunai/{id}/upload-sspd', [DataTunaiController::class, 'uploadSspdInline'])->name('petugas_penagihan.data_tunai.uploadSspdInline');
+    Route::get('/data_tunai/{id}/bukti_pembayaran', [DataTunaiController::class, 'showPaymentProof'])->name('petugas_penagihan.data_tunai.showPaymentProof');
+    Route::get('/data_tunai/{id}/bukti_sspd', [DataTunaiController::class, 'showSspdProof'])->name('petugas_penagihan.data_tunai.showSspdProof');
+    Route::get('data_tunai/exportPdf', [DataTunaiController::class, 'exportPdf'])->name('petugas_penagihan.data_tunai.exportPdf');
+    Route::get('/data_tunai/filter', [DataTunaiController::class, 'filter'])->name('petugas_penagihan.data_tunai.filter');
+
+
+
+
+    
+
+
+Route::post('/data_penagihan/upload/{id}', 
+[DataPenagihanController::class, 'uploadBuktiPembayaran'])->name('data_penagihan.upload');
 // Route::patch('data_penagihan/{id}/update-status', [DataPenagihanController::class, 'markAsPaid'])->name('data_penagihan.updateStatus');
 Route::put('/data_penagihan/{id}/update-status', [DataPenagihanController::class, 'markAsPaid'])->name('data_penagihan.updateStatus');
-Route::get('data_penagihan/exportExcel', [DataPenagihanController::class, 'exportExcel'])->name('data_penagihan.exportExcel');
-Route::get('data_penagihan/exportPdf', [DataPenagihanController::class, 'exportPdf'])->name('data_penagihan.exportPdf');
+// Route::get('data_penagihan/exportExcel', [DataPenagihanController::class, 'exportExcel'])->name('data_penagihan.exportExcel');
+Route::get('data_penagihan/exportPdf', [DataPenagihanController::class, 'exportPdf'])->name('petugas_penagihan.data_penagihan.exportPdf');
+
 
 
 
@@ -98,6 +188,19 @@ Route::get('data_penagihan/exportPdf', [DataPenagihanController::class, 'exportP
 
 
 // ADMIN
+
+Route::get('/storage/uploads/{path}', function ($path) {
+    $filePath = storage_path('app/public/uploads/' . $path);
+
+    if (!File::exists($filePath)) {
+        abort(404, 'File not found.');
+    }
+
+    $file = File::get($filePath);
+    $type = File::mimeType($filePath);
+
+    return response($file, 200)->header("Content-Type", $type);
+})->where('path', '.*')->middleware('role:admin');
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/admin', [IndexAdminController::class, 'index'])->name('admin.index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -125,38 +228,38 @@ Route::group(['middleware' => ['role:admin']], function () {
 
 
     // PENETAPAN
-    Route::get('/data_penetapan/filter', [DataPenetapanController::class, 'filter'])->name('admin.data_penetapan.filter');
-    Route::get('/data_penetapan', [DataPenetapanController::class, 'index'])->name('admin.data_penetapan.data');
-    Route::post('/data_penetapan/import', [DataPenetapanController::class, 'import'])->name('admin.data_penetapan.import');
-    // Route::get('/data_penetapan/index', [DataPenetapanController::class, 'index'])->name('admin.data_penetapan.index');
-    Route::get('/data_penetapan/add', [DataPenetapanController::class, 'create'])->name('admin.data_penetapan.create');
-    Route::post('/data_penetapan/add', [DataPenetapanController::class, 'store'])->name('admin.data_penetapan.store');
-    Route::get('/data_penetapan/edit/{id}', [DataPenetapanController::class, 'edit'])->name('admin.data_penetapan.edit');
-    Route::put('/data_penetapan/update/{id}', [DataPenetapanController::class, 'update'])->name('admin.data_penetapan.update');
-    Route::delete('/data_penetapan/delete/{id}', [DataPenetapanController::class, 'destroy'])->name('admin.data_penetapan.delete');
-    // Route::put('/data_penetapan/{id}/status', [DataPenetapanController::class, 'updateStatus'])->name('admin.data_penetapan.updateStatus');
-    Route::get('/pembayaran', [DataPenetapanController::class, 'pembayaran'])->name('admin.data_penetapan.pembayaran');
-    // Route::get('/pembayaran', [DataPenetapanController::class, 'synchronizeToPiutang'])->name('admin.data_penetapan.synchronizeToPiutang');
-    Route::put('/data-penetapan/{id}/update-status', [DataPenetapanController::class, 'updateStatus'])->name('admin.data_penetapan.updateStatus');
-    Route::get('data_penetapan/exportExcel', [DataPenetapanController::class, 'exportExcel'])->name('admin.data_penetapan.exportExcel');
-    Route::get('data_penetapan/exportPdf', [DataPenetapanController::class, 'exportPdf'])->name('admin.data_penetapan.exportPdf');
-
-
-
-    // PIUTANG
-    // Route::get('/data_wajibpajak/{npwpd}', [DataWajibPajakController::class, 'getDataByNpwpd']);
     Route::get('/data_piutang/filter', [DataPiutangController::class, 'filter'])->name('admin.data_piutang.filter');
     Route::get('/data_piutang', [DataPiutangController::class, 'index'])->name('admin.data_piutang.data');
-    // Route::post('/data_piutang/import', [DataPiutangController::class, 'import'])->name('admin.data_piutang.import');
-    Route::post('data_piutang/zonasi', [DataPiutangController::class, 'saveZonasi'])->name('admin.data_piutang.saveZonasi');
-    Route::post('/data_piutang/import', [DataPiutangController::class, 'importFromDataPenetapan'])->name('admin.data_piutang.import');
+    Route::post('/data_piutangn/import', [DataPiutangController::class, 'import'])->name('admin.data_piutang.import');
+    // Route::get('/data_penetapan/index', [DataPenetapanController::class, 'index'])->name('admin.data_penetapan.index');
     Route::get('/data_piutang/add', [DataPiutangController::class, 'create'])->name('admin.data_piutang.create');
     Route::post('/data_piutang/add', [DataPiutangController::class, 'store'])->name('admin.data_piutang.store');
     Route::get('/data_piutang/edit/{id}', [DataPiutangController::class, 'edit'])->name('admin.data_piutang.edit');
     Route::put('/data_piutang/update/{id}', [DataPiutangController::class, 'update'])->name('admin.data_piutang.update');
     Route::delete('/data_piutang/delete/{id}', [DataPiutangController::class, 'destroy'])->name('admin.data_piutang.delete');
+    // Route::put('/data_penetapan/{id}/status', [DataPenetapanController::class, 'updateStatus'])->name('admin.data_penetapan.updateStatus');
+    Route::get('/pembayaran', [DataPiutangController::class, 'pembayaran'])->name('admin.data_piutang.pembayaran');
+    // Route::get('/pembayaran', [DataPenetapanController::class, 'synchronizeToPiutang'])->name('admin.data_penetapan.synchronizeToPiutang');
+    Route::put('/data_piutang/{id}/update-status', [DataPiutangController::class, 'updateStatus'])->name('admin.data_piutang.updateStatus');
     Route::get('data_piutang/exportExcel', [DataPiutangController::class, 'exportExcel'])->name('admin.data_piutang.exportExcel');
     Route::get('data_piutang/exportPdf', [DataPiutangController::class, 'exportPdf'])->name('admin.data_piutang.exportPdf');
+
+
+
+    // PIUTANG
+    // Route::get('/data_wajibpajak/{npwpd}', [DataWajibPajakController::class, 'getDataByNpwpd']);
+    // Route::get('/data_piutang/filter', [DataPiutangController::class, 'filter'])->name('admin.data_piutang.filter');
+    // Route::get('/data_piutang', [DataPiutangController::class, 'index'])->name('admin.data_piutang.data');
+    // // Route::post('/data_piutang/import', [DataPiutangController::class, 'import'])->name('admin.data_piutang.import');
+    // Route::post('data_piutang/zonasi', [DataPiutangController::class, 'saveZonasi'])->name('admin.data_piutang.saveZonasi');
+    // Route::post('/data_piutang/import', [DataPiutangController::class, 'importFromDataPenetapan'])->name('admin.data_piutang.import');
+    // Route::get('/data_piutang/add', [DataPiutangController::class, 'create'])->name('admin.data_piutang.create');
+    // Route::post('/data_piutang/add', [DataPiutangController::class, 'store'])->name('admin.data_piutang.store');
+    // Route::get('/data_piutang/edit/{id}', [DataPiutangController::class, 'edit'])->name('admin.data_piutang.edit');
+    // Route::put('/data_piutang/update/{id}', [DataPiutangController::class, 'update'])->name('admin.data_piutang.update');
+    // Route::delete('/data_piutang/delete/{id}', [DataPiutangController::class, 'destroy'])->name('admin.data_piutang.delete');
+    // Route::get('data_piutang/exportExcel', [DataPiutangController::class, 'exportExcel'])->name('admin.data_piutang.exportExcel');
+    // Route::get('data_piutang/exportPdf', [DataPiutangController::class, 'exportPdf'])->name('admin.data_piutang.exportPdf');
 
 
 
@@ -167,15 +270,55 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('laporan_piutang/exportExcel', [LaporanPiutangController::class, 'exportExcel'])->name('admin.laporan_piutang.exportExcel');
     Route::get('laporan_piutang/exportPdf', [LaporanPiutangController::class, 'exportPdf'])->name('admin.laporan_piutang.exportPdf');
 
+    Route::get('/laporan_transfer', [LaporanTransferController::class, 'index'])->name('admin.laporan_transfer.data');
+    Route::get('laporan_transfer/exportExcel', [LaporanTransferController::class, 'exportExcel'])->name('admin.laporan_transfer.exportExcel');
+    Route::get('laporan_transfer/exportPdf', [LaporanTransferController::class, 'exportPdf'])->name('admin.laporan_transfer.exportPdf');
+
+    Route::get('/laporan_tunai', [LaporanTunaiController::class, 'index'])->name('admin.laporan_tunai.data');
+    Route::get('/laporan_tunai', [LaporanTunaiController::class, 'index'])->name('admin.laporan_tunai.data');
+    Route::get('laporan_tunai/exportExcel', [LaporanTunaiController::class, 'exportExcel'])->name('admin.laporan_tunai.exportExcel');
+    Route::get('laporan_tunai/exportPdf', [LaporanTunaiController::class, 'exportPdf'])->name('admin.laporan_tunai.exportPdf');
+
+    Route::get('/laporan_konfirmasi', [LaporanKonfirmasiController::class, 'index'])->name('admin.laporan_konfirmasi.data');
+    Route::get('laporan_konfirmasi/exportExcel', [LaporanKonfirmasiController::class, 'exportExcel'])->name('admin.laporan_konfirmasi.exportExcel');
+    Route::get('laporan_konfirmasi/exportPdf', [LaporanKonfirmasiController::class, 'exportPdf'])->name('admin.laporan_konfirmasi.exportPdf');
+    Route::get('/laporan_konfirmasi/{id}/bukti_visit', [LaporanKonfirmasiController::class, 'showVisitProof'])->name('admin.laporan_konfirmasi.showVisitProof');
+    Route::get('/laporan_konfirmasi/filter', [LaporanKonfirmasiController::class, 'filter'])->name('admin.laporan_konfirmasi.filter');
+
+    Route::get('/laporan_penutupan', [LaporanPenutupanController::class, 'index'])->name('admin.laporan_penutupan.data');
+    Route::get('laporan_penutupan/exportExcel', [LaporanPenutupanController::class, 'exportExcel'])->name('admin.laporan_penutupan.exportExcel');
+    Route::get('laporan_penutupan/exportPdf', [LaporanPenutupanController::class, 'exportPdf'])->name('admin.laporan_penutupan.exportPdf');
+    Route::get('laporan_penutupan/exportExcel', [LaporanPenutupanController::class, 'exportExcel'])->name('admin.laporan_penutupan.exportExcel');
+    Route::get('/laporan_penutupan/{id}/bukti_visit', [LaporanPenutupanController::class, 'showPenutupanProof'])->name('admin.laporan_penutupan.showPenutupanProof');
+    Route::get('/laporan_penutupan/filter', [LaporanPenutupanController::class, 'filter'])->name('admin.laporan_penutupan.filter');
+
+    
+    
+    Route::get('/laporan_transfer/{id}/bukti_pembayaran', [LaporanTransferController::class, 'showPaymentProof'])->name('admin.laporan_transfer.showPaymentProof');
+    Route::get('/laporan_transfer/{id}/bukti_sspd', [LaporanTransferController::class, 'showSspdProof'])->name('admin.laporan_transfer.showSspdProof');
+    Route::get('/laporan_transfer/filter', [LaporanTransferController::class, 'filter'])->name('admin.laporan_transfer.filter');
+    // Route::post('/laporan_transfer/konfirmasi/{id}', [LaporanTransferController::class, 'konfirmasi'])
+    // ->name('admin.laporan_transfer.konfirmasi');
+    Route::patch('/laporan-transfer/konfirmasi/{id}', [LaporanTransferController::class, 'updateKonfirmasi'])->name('admin.laporan_transfer.update_konfirmasi');
+    Route::patch('/laporan-transfer/konfirmasi/{id}', [LaporanTransferController::class, 'updateKonfirmasi']);
+
+    
+    
+    Route::get('/laporan_tunai/{id}/bukti_pembayaran', [LaporanTunaiController::class, 'showPaymentProof'])->name('admin.laporan_tunai.showPaymentProof');
+
+    Route::get('/laporan_tunai/{id}/bukti_sspd', [LaporanTunaiController::class, 'showSspdProof'])->name('admin.laporan_tunai.showSspdProof');
+
+    Route::get('/laporan_tunai/filter', [LaporanTunaiController::class, 'filter'])->name('admin.laporan_tunai.filter');
+    // Route::post('/laporan_tunai/konfirmasi/{id}', [LaporanTunaiController::class, 'konfirmasi'])
+    // ->name('admin.laporan_tunai.konfirmasi');
+    Route::patch('/laporan-tunai/konfirmasi/{id}', [LaporanTunaiController::class, 'updateKonfirmasi'])->name('admin.laporan_tunai.update_konfirmasi');
+    Route::patch('/laporan-tunai/konfirmasi/{id}', [LaporanTunaiController::class, 'updateKonfirmasi']);
 
 
-    // PELUNASAN
-    Route::get('/laporan_pelunasan', [LaporanPelunasanController::class, 'index'])->name('admin.laporan_pelunasan.data');
-    Route::get('/laporan_pelunasan/filter', [LaporanPelunasanController::class, 'filter'])->name('admin.laporan_pelunasan.filter');
-    Route::get('/laporan_pelunasan/{id}/bukti_pembayaran', [LaporanPelunasanController::class, 'showPaymentProof'])->name('admin.laporan_pelunasan.showPaymentProof');
-    Route::get('/laporan_pelunasan/{id}/bukti_visit', [LaporanPelunasanController::class, 'showVisitProof'])->name('admin.laporan_pelunasan.showVisitProof');
-    Route::get('laporan_pelunasan/exportExcel', [LaporanPelunasanController::class, 'exportExcel'])->name('admin.laporan_pelunasan.exportExcel');
-    Route::get('laporan_pelunasan/exportPdf', [LaporanPelunasanController::class, 'exportPdf'])->name('admin.laporan_pelunasan.exportPdf');
+    
+    
+    
+
 
 
 
@@ -187,18 +330,24 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::put('/jenis_pajak/update/{id}', [JenisPajakController::class, 'update'])->name('admin.jenis_pajak.update');
     Route::delete('/jenis_pajak/delete/{id}', [JenisPajakController::class, 'destroy'])->name('admin.jenis_pajak.delete');
 
-
+    // PESAN
+    Route::get('/kelola_pesan_whatsapp', [KelolaPesanWhatsappController::class, 'index'])->name('admin.kelola_pesan_whatsapp.data');
+    Route::get('/kelola_pesan_whatsapp/add', [KelolaPesanWhatsappController::class, 'create'])->name('admin.kelola_pesan_whatsapp.create');
+    Route::post('/kelola_pesan_whatsapp/add', [KelolaPesanWhatsappController::class, 'store'])->name('admin.kelola_pesan_whatsapp.store');
+    Route::get('/kelola_pesan_whatsapp/edit/{id}', [KelolaPesanWhatsappController::class, 'edit'])->name('admin.kelola_pesan_whatsapp.edit');
+    Route::put('/kelola_pesan_whatsapp/update/{id}', [KelolaPesanWhatsappController::class, 'update'])->name('admin.kelola_pesan_whatsapp.update');
+    Route::delete('/kelola_pesan_whatsapp/delete/{id}', [KelolaPesanWhatsappController::class, 'destroy'])->name('admin.kelola_pesan_whatsapp.delete');
 
     // KATEGORI PAJAK
-    Route::get('/kategori_pajak', [KategoriPajakController::class, 'index'])->name('admin.kategori_pajak.data');
-    Route::get('/kategori_pajak/add', [KategoriPajakController::class, 'create'])->name('admin.kategori_pajak.create');
-    Route::post('/kategori_pajak/add', [KategoriPajakController::class, 'store'])->name('admin.kategori_pajak.store');
-    Route::get('/kategori_pajak/edit/{id}', [KategoriPajakController::class, 'edit'])->name('admin.kategori_pajak.edit');
-    Route::put('/kategori_pajak/update/{id}', [KategoriPajakController::class, 'update'])->name('admin.kategori_pajak.update');
-    Route::delete('/kategori_pajak/delete/{id}', [KategoriPajakController::class, 'destroy'])->name('admin.kategori_pajak.delete');
-    Route::get('/kategori_pajak/filter', [KategoriPajakController::class, 'filter'])->name('admin.kategori_pajak.filter');
+    // Route::get('/kategori_pajak', [KategoriPajakController::class, 'index'])->name('admin.kategori_pajak.data');
+    // Route::get('/kategori_pajak/add', [KategoriPajakController::class, 'create'])->name('admin.kategori_pajak.create');
+    // Route::post('/kategori_pajak/add', [KategoriPajakController::class, 'store'])->name('admin.kategori_pajak.store');
+    // Route::get('/kategori_pajak/edit/{id}', [KategoriPajakController::class, 'edit'])->name('admin.kategori_pajak.edit');
+    // Route::put('/kategori_pajak/update/{id}', [KategoriPajakController::class, 'update'])->name('admin.kategori_pajak.update');
+    // Route::delete('/kategori_pajak/delete/{id}', [KategoriPajakController::class, 'destroy'])->name('admin.kategori_pajak.delete');
+    // Route::get('/kategori_pajak/filter', [KategoriPajakController::class, 'filter'])->name('admin.kategori_pajak.filter');
 
-
+    
 
     // USER
     Route::get('/data_user', [DataUserController::class, 'index'])->name('admin.data_user.data');
@@ -215,8 +364,8 @@ Route::group(['middleware' => ['role:admin']], function () {
 
 
     // PROFIL
-    Route::get('/profil/admin', [ProfileController::class, 'index'])->name('profile');
-    Route::post('/profile/admin/update', [ProfileController::class, 'update'])->name('profile.update');
+Route::get('/profil/admin', [ProfilAdminController::class, 'index'])->name('admin.profil');
+Route::put('/profil/admin/update', [ProfilAdminController::class, 'update'])->name('admin.profil.update');
     
     // FONNTE
     // Route::post('data-wajib-pajak/send-whatsapp', [DataWajibPajakController::class, 'sendWhatsApp'])->name('data-wajib-pajak.send-whatsapp');
@@ -248,11 +397,3 @@ Route::fallback(function () {
 
 
     //     Route::post('/data_zonasi/cetak_rekap', [DataZonasiController::class, 'cetakRekap'])->name('admin.data_zonasi.cetakRekap');
-
-    // laporan
-    // Route::get('/laporan_penagihan', [LaporanPenagihanController::class, 'index'])->name('admin.laporan_penagihan.data');
-    // Route::post('/laporan_penagihan/markAsPaid/{id}', [LaporanPenagihanController::class, 'markAsPaid'])->name('admin.laporanpenagihan.markAsPaid');
-    // Route::get('/laporan_penagihan', [LaporanPenagihanController::class, 'filter'])->name('admin.laporan_penagihan.filter');
-    // Route::get('/laporan_penagihan/{id}/bukti_visit', [LaporanPenagihanController::class, 'showVisitProof'])->name('admin.laporan_penagihan.showVisitProof');
-    // Route::get('/laporan_penagihan/{id}/bukti_pembayaran', [LaporanPenagihanController::class, 'showPaymentProof'])->name('admin.laporan_penagihan.showPaymentProof');
-    // Route::get('/laporan_penagihan', [LaporanPenagihanController::class, 'filter'])->name('admin.laporan_penagihan.filter');

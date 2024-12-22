@@ -13,32 +13,27 @@ class DataPiutang extends Model
         'nama_pajak',
         'alamat',
         'npwpd',
+        // 'nomor_telepon',
         'jenis_pajak_id',
-        'kategori_pajak_id',
-        'jumlah_penagihan',
+        // 'kategori_pajak_id',
+        'telepon',
+        'zona',
         'periode',
-        'pembagian_zonasi',
     ];
 
     public function jenisPajak()
     {
-        return $this->belongsTo(JenisPajak::class, 'jenis_pajak_id');
+        return $this->belongsTo(JenisPajak::class, 'jenis_pajak_id'); // Sesuaikan dengan nama kolom relasi
+    }
+    public function datapiutang()
+    {
+        return $this->belongsTo(DataPiutang::class, 'npwpd', 'npwpd');
+    }
+
+    public function dataWajibPajak()
+    {
+        return $this->belongsTo(DataWajibPajak::class, 'npwpd', 'npwpd');
     }
     
-    public function kategoriPajak()
-    {
-        return $this->belongsTo(KategoriPajak::class, 'kategori_pajak_id');
-    }
-
-    public function dataPenetapan()
-    {
-        return $this->belongsTo(DataPenetapan::class, 'npwpd', 'npwpd');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'pembagian_zonasi', 'pembagian_zonasi');
-    }
     
-
 }

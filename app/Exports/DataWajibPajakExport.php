@@ -15,7 +15,7 @@ class DataWajibPajakExport implements FromCollection, WithHeadings, WithEvents
     public function collection()
 {
     // Ambil data penetapan dari database
-    $dataWajibPajak = DataWajibPajak::with(['jenisPajak', 'kategoriPajak'])
+    $dataWajibPajak = DataWajibPajak::with(['jenisPajak'])
     // ->orderBy('created_at', 'desc')
     ->get();
 
@@ -27,9 +27,9 @@ class DataWajibPajakExport implements FromCollection, WithHeadings, WithEvents
             $datawajibpajak->alamat,
             $datawajibpajak->npwpd,
             $datawajibpajak->jenisPajak->jenispajak ?? '-',
-            $datawajibpajak->kategoriPajak->kategoripajak ?? '-',
-            $datawajibpajak->nomor_telepon,
-            $datawajibpajak->pembagian_zonasi,
+            // $datawajibpajak->kategoriPajak->kategoripajak ?? '-',
+            $datawajibpajak->telepon,
+            $datawajibpajak->zona,
             // $datawajibpajak->jumlah_penagihan,
             // $datawajibpajak->periode,
         ];
@@ -45,9 +45,9 @@ public function headings(): array
         'Alamat',
         'NPWPD',
         'Jenis Pajak',
-        'Kategori Pajak',
-        'Nomor Telepon',
-        'Pembagian Zonasi',
+        // 'Kategori Pajak',
+        'Telepon',
+        'Zona',
         // 'Jumlah Penagihan',
         // 'Periode',
     ];
@@ -60,8 +60,8 @@ public function registerEvents(): array
             $sheet = $event->sheet;
 
             // Menambahkan judul besar di atas header tabel (baris pertama)
-            $sheet->mergeCells('A1:H1'); // Menggabungkan sel A1 hingga E1
-            $sheet->setCellValue('A1', 'Data Wajib Pajak Pajak Pemerintah Kota Ambon'); // Menetapkan judul
+            $sheet->mergeCells('A1:G1'); // Menggabungkan sel A1 hingga E1
+            $sheet->setCellValue('A1', 'Data Wajib Pajak BAPENDA Kota Ambon'); // Menetapkan judul
 
             // Menambahkan style pada judul
             $sheet->getStyle('A1')->applyFromArray([
@@ -84,7 +84,7 @@ public function registerEvents(): array
             }
 
             // Menambahkan style untuk header kolom (baris kedua)
-            $sheet->getStyle('A2:H2')->applyFromArray([
+            $sheet->getStyle('A2:G2')->applyFromArray([
                 'font' => [
                     'bold' => true,
                 ],
@@ -114,7 +114,7 @@ public function registerEvents(): array
             }
 
             // Menambahkan style untuk data (baris ketiga dan seterusnya)
-            $sheet->getStyle("A3:H" . ($row - 1))->applyFromArray([
+            $sheet->getStyle("A3:G" . ($row - 1))->applyFromArray([
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -123,7 +123,7 @@ public function registerEvents(): array
             ]);
 
             // Mengatur lebar kolom secara otomatis
-            foreach (range('A', 'H') as $columnID) {
+            foreach (range('A', 'G') as $columnID) {
                 $sheet->getColumnDimension($columnID)->setAutoSize(true);
             }
         },

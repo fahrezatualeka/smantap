@@ -26,10 +26,10 @@ class User extends Authenticatable
         'nama',
         'username',
         'password',
-        'nomor_telepon',
+        'telepon',
         'alamat',
         'role',
-        'pembagian_zonasi',
+        'zona',
     ];    
     /**
      * The attributes that should be hidden for arrays.
@@ -52,11 +52,11 @@ class User extends Authenticatable
 
     public function dataPiutang()
 {
-    return $this->hasMany(DataPiutang::class, 'pembagian_zonasi', 'pembagian_zonasi');
+    return $this->hasMany(DataPiutang::class, 'zona', 'zona');
 }
 public function dataPenagihan()
 {
-    return $this->hasMany(DataPenagihan::class, 'pembagian_zonasi', 'pembagian_zonasi');
+    return $this->hasMany(DataPenagihan::class, 'zona', 'zona');
 }
 
 }

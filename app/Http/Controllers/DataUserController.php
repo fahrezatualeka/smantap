@@ -25,8 +25,8 @@ class DataUserController extends Controller
         }
     
         // Filter berdasarkan pembagian zonasi
-        if ($request->has('pembagian_zonasi') && $request->pembagian_zonasi != '') {
-            $query->where('pembagian_zonasi', $request->pembagian_zonasi);
+        if ($request->has('zona') && $request->zona != '') {
+            $query->where('zona', $request->zona);
         }
     
         // Pencarian berdasarkan nama atau username
@@ -35,7 +35,7 @@ class DataUserController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'LIKE', '%' . $search . '%')
                   ->orWhere('username', 'LIKE', '%' . $search . '%')
-                  ->orWhere('nomor_telepon', 'LIKE', '%' . $search . '%')
+                  ->orWhere('telepon', 'LIKE', '%' . $search . '%')
                   ->orWhere('alamat', 'LIKE', '%' . $search . '%');
                 //   ->orWhere('role', 'LIKE', '%' . $search . '%')
                 //   ->orWhere('pembagian_zonasi', 'LIKE', '%' . $search . '%');
@@ -58,17 +58,17 @@ class DataUserController extends Controller
             'nama' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
             'password' => 'required|min:3',
-            'nomor_telepon' => 'required|string|max:15',
+            'telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
             'role' => 'required|in:admin,petugas_penagihan,pimpinan',
             // 'pembagian_zonasi' => 'nullable|integer|exists:zonasi,id',
-            'pembagian_zonasi' => 'nullable|integer',
+            'zona' => 'nullable|integer',
         ]);
     
         $data['password'] = Hash::make($data['password']);
         
         if ($data['role'] === 'admin') {
-            $data['pembagian_zonasi'] = null;
+            $data['zona'] = null;
         }
     
         try {

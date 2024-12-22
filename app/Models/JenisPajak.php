@@ -14,21 +14,13 @@ class JenisPajak extends Model
     protected $fillable = ['jenispajak'];
 
     // Relasi ke KategoriPajak
-    public function kategoriPajak()
-    {
-        return $this->hasMany(KategoriPajak::class);
-    }
+    // public function kategoriPajak()
+    // {
+    //     return $this->hasMany(KategoriPajak::class);
+    // }
     public function dataWajibPajak()
     {
         return $this->hasMany(DataWajibPajak::class, 'jenis_pajak_id');
     }
-
-    public function dataZonasi()
-{
-    return $this->hasMany(DataZonasi::class);
-}
-
-    
-    
-    
+        
 }

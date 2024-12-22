@@ -9,7 +9,7 @@
                     <i> SELAMAT DATANG di</i>
                 </p>
                 <p style="text-align:center; font-size:25px">
-                    <b> SISTEM APLIKASI PENAGIHAN PIUTANG PAJAK <br> PEMERINTAH KOTA AMBON </b>
+                    <b> SISTEM APLIKASI PENAGIHAN PIUTANG PAJAK <br> BAPENDA KOTA AMBON </b>
                     <p style="text-align:center; font-size:18px">
                          {{ Auth::user()->role }}
                         ({{ Auth::user()->nama }})
